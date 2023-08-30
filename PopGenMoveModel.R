@@ -17,7 +17,7 @@
 # 
 #
 ####################################################################
-setwd("")
+setwd("~/GitHub/CaribouPopGen")
 
 directory = getwd()
 outdir    = paste(directory,"/output/",sep="")                    #directory to save model output  
@@ -42,10 +42,10 @@ allelefreqs = list(A112freq = c(0.024,0.167,0.135,0.415,0.021,0.011,0.196,0.008,
                    R9freq   = c(0.005,0.011,0.014,0.957,0.008,0.005) )
 
 # simulation parameters
-popsize  = c(50,100,200,350,500)        # population sizes to simulate 
-simyears = 501                          # total years to run the isolation portion of the simulation (does not include delay)
-survival = 0.96                         # survival rate
-agecap   = seq(2, 102, 20)              # maximum age
+popsize  = c(50,100)                    # population sizes to simulate 
+simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
+survival = 0.90                         # survival rate from literature I saw 85-90%
+agecap   = seq(2, 102, 20)              # maximum age (2 to 102 using 20 year intervals in example)
 reps     = 100                          # replicates
 structK  = 3                            # number of K for structure analyses
 levels   = seq(0, 500, 25)              # years to run structure
