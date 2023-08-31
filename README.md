@@ -1,5 +1,31 @@
 # CaribouPopGen
 
+
+Chapter 1: Genetic Analysis of the Mulchatna Caribou Herd from Southwest Alaska
+
+Code assessed here is used for the first chapter of dissertation at Auburn University.
+
+Model description last updated: 08/31/23
+
+Keywords:
+- population structure
+- genetics
+- caribou
+- Alaska
+- wildlife conservation
+
+Model Objectives
+
+1. Gather information on the population structure of the Mulchatna caribou herd.
+2. Use genetic values and collected collar data to examine how long we will expect to see a genetic separation between subgroups observed through the amount of breeding ground switching.
+3. Determine how this can be used for future management and conservation of this declining resource.
+
+Our aim in conducting these analyses is to gain insights into the genetic structure of the herd, the interconnections, and variances between these separated groups in terms of their spatial distribution.
+
+#Model Overview
+We will design an agent-based forward time model to simulate the length of time it takes to observe genetic separation between subgroups observed in the Mulchatna caribou herd. We will simulate sexually reproducing diploid individuals (e.g. caribou) with discrete time intervals and generation times. We will simulate the Mulchatna caribou herd that randomly mates, produces calves, and is subject to mortality. We will output estimates of We will allow our model to persist for 100 years to understand if the current genetic composition of the herd in additon to the current spatial movement (breeding ground switching) observed with collar data will lead to genetic separation of the herd into subgroups. 
+
+
 Modified code from Willoughby's Isolation-Drift (description of model below is similar to that IsoDrift Code)
 R code will simulates breeding ground movement and how that impacts genetic structure over time in Mulchatna caribou herd. It also calls Structure to evaluate the impact. Analysis also includes measurement of heterozygosity, Fst, and DAPC (discriminant analysis of principle components) to futher quantify the effects of isolation in the two populations.
 
