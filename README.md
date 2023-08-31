@@ -22,8 +22,17 @@ Model Objectives
 
 Our aim in conducting these analyses is to gain insights into the genetic structure of the herd, the interconnections, and variances between these separated groups in terms of their spatial distribution.
 
-#Model Overview
-We will design an agent-based forward time model to simulate the length of time it takes to observe genetic separation between subgroups observed in the Mulchatna caribou herd. We will simulate sexually reproducing diploid individuals (e.g. caribou) with discrete time intervals and generation times. We will simulate the Mulchatna caribou herd that randomly mates, produces calves, and is subject to mortality. We will output estimates of We will allow our model to persist for 100 years to understand if the current genetic composition of the herd in additon to the current spatial movement (breeding ground switching) observed with collar data will lead to genetic separation of the herd into subgroups. 
+# Model Overview
+
+We will design an agent-based forward time model to simulate the length of time it takes to observe genetic separation between subgroups observed in the Mulchatna caribou herd. We will simulate sexually reproducing diploid individuals (e.g. caribou) with discrete time intervals and generation times. We will simulate the Mulchatna caribou herd that randomly mates, produces calves, and is subject to mortality. We will output estimates of Fst, heterozygosity, results of structure analysis and a PCA or PCoA? We will allow our model to persist for 100 years to understand if the current genetic composition of the herd in additon to the current spatial movement (breeding ground switching) observed with collar data will lead to genetic separation of the herd into subgroups. 
+
+# Initializing Model Design
+
+Populations will start with a population size (popsize), with overlapping generations that will allow it to be simulated as a natural caribou population. Alleles (0 and 1) will be randomly assigned to each individual with equal probability for all loci. Loci will be simulated for SNP (n = 10) molecular markers, as the results provide conclusions from coding genetic data. The maximum age of individuals (13 years), number of offspring (1), popsize (100), and the age at maturity (2 years), percent breeding ground switching (16%), and sex ratio (1 male: 2 females) will all be parameters fed to the simulation.
+
+# Model Details
+
+
 
 
 Modified code from Willoughby's Isolation-Drift (description of model below is similar to that IsoDrift Code)
