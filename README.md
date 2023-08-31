@@ -32,7 +32,7 @@ Populations will start with a population size (popsize), with overlapping genera
 
 # Model Details
 
-
+Individual caribou agents will be simulated throughout their lifetime to determine the population-level effects on the genetic structure of breeding ground switching between determined subgroups within the herd. Breeding ground values will begin with the current data then theoretical values will be added (increasing, decreasing and same values).  
 
 
 Modified code from Willoughby's Isolation-Drift (description of model below is similar to that IsoDrift Code)
