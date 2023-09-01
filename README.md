@@ -24,7 +24,7 @@ Our aim in conducting these analyses is to gain insights into the genetic struct
 
 # Model Overview
 
-We will design an agent-based forward time model to simulate the length of time it takes to observe genetic separation between subgroups observed in the Mulchatna caribou herd. We will simulate sexually reproducing diploid individuals (e.g. caribou) with discrete time intervals and generation times. We will simulate the Mulchatna caribou herd that randomly mates, produces calves, and is subject to mortality. We will output estimates of Fst, heterozygosity, results of structure analysis and a PCA or PCoA? We will allow our model to persist for 100 years to understand if the current genetic composition of the herd in additon to the current spatial movement (breeding ground switching) observed with collar data will lead to genetic separation of the herd into subgroups. 
+We will design an agent-based forward time model to simulate the length of time it takes to observe a genetic separation between subgroups observed in the Mulchatna caribou herd. We will simulate sexually reproducing diploid individuals (e.g. caribou) with discrete time intervals and generation times. We will simulate the Mulchatna caribou herd that randomly mates, produces calves, and is subject to mortality. We will output estimates of Fst, heterozygosity, results of structure analysis, and a PCA or PCoA? We will allow our model to persist for 100 years to understand if the current genetic composition of the herd in addition to the current spatial movement (breeding ground switching) observed with collar data will lead to genetic separation of the herd into subgroups. 
 
 # Initializing Model Design
 
@@ -32,7 +32,21 @@ Populations will start with a population size (popsize), with overlapping genera
 
 # Model Details
 
-Individual caribou agents will be simulated throughout their lifetime to determine the population-level effects on the genetic structure of breeding ground switching between determined subgroups within the herd. Breeding ground values will begin with the current data then theoretical values will be added (increasing, decreasing and same values).  
+Individual caribou agents will be simulated throughout their lifetime to determine the population-level effects on the genetic structure of breeding ground switching between determined subgroups within the herd. To initialize the population, three subgroups will be simulated and individuals will be aged so that the age of every individual in the population increases by one each year. Following aging, individual caribou can be removed such that each caribou individual has a percentage of survival (ranging from .85-0.90% survival rate). Breeding ground switching will occur by simulating a proportion of individuals (starting with 16% of individuals from popsize, switching at least once) percentage of breeding ground switching will be a parameter that can be modified depending on popsize. Individuals in the population choose mates randomly so that one male and one female will mate every year, with new reassignments to new mates every year. Each female will be given a probabiliy of becoming parturient (0.89) and successfully calving of 0.69. 
+
+# Model Calibration with Empirical Data 
+
+For this model, empirical data was used, however, further analysis and calibration of this simulation may exploit empirical data. 
+
+# Expected Results
+
+We hypothesize that the fidelity of female caribou to their calving sites will be evident both in the data collected from radio and satellite tracking, as well as in the genetic divergence. This loyalty of females to their calving grounds is well-documented. Also in real world populations, due to the high mobility of caribou as a migratory species, we expect these genetic differences to be minimal (Boulet et al. 2007). Considering the observed rates of breeding ground switching, it is anticipated that the division of the Mulchatna caribou herd into distinct subgroups would require a significant amount of time before it is regarded as more than a single herd. Our aim in conducting these analyses is to gain insights into the genetic structure of the herd over time as female caribou switch breeding grounds at a certain percentage or rate.
+
+We expect that as breeding ground switching values increase, the Fst values will be small and heterozygosity values will be low as greater breeding ground switching will most likely lead to mixing between populations and indistict subgroups. 
+
+# Potential Challenges
+
+
 
 
 Modified code from Willoughby's Isolation-Drift (description of model below is similar to that IsoDrift Code)
