@@ -1,16 +1,16 @@
 RunSims = function(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay){
   #set up some needed variables
-  lnames  = names(alleles)
-  numloci = as.numeric(length(lnames))
-  
-  #keep copy of alleles and frequencies
-  originalalleles     = alleles
-  originalallelefreqs = allelefreqs
+  # lnames  = names(alleles)
+  # numloci = as.numeric(length(lnames))
+  # 
+  # #keep copy of alleles and frequencies
+  # originalalleles     = alleles
+  # originalallelefreqs = allelefreqs
   
   #iterate over popsize values 
   for (n in 1:length(popsize)){
     #iterate over maximum ages
-    for(a in 1:length(agecap)){
+    for(a in 1:length(maxage)){
       #iterate over replicates
       for (j in 1:reps){
         #het matrix

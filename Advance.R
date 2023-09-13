@@ -7,8 +7,8 @@ Advance = function(pop, numloci, a, lcols){
   tokill = sample(seq(1, nrow(pop), 1), size = round((1-survival)*nrow(pop)), replace=FALSE)
   pop[tokill,(numloci*2)+2] = 0
   
-  #mark individuals older than agecap as dead (0)
-  pop[pop[,(numloci*2)+1]>agecap[a],(numloci*2)+2] = 0
+  #mark individuals older than maxage as dead (0)
+  pop[pop[,(numloci*2)+1]>maxage[a],(numloci*2)+2] = 0
   
   #generate list of dead
   toreplace = which(pop[,(numloci*2)+2]==0)

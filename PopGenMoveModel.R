@@ -42,10 +42,14 @@ source(paste(directory, "/source/FunctionSourcer.R", sep = ''))   #source functi
 #                    R9freq   = c(0.005,0.011,0.014,0.957,0.008,0.005) )
 
 # simulation parameters
+alleles
+allelefreq
 popsize  = c(50,100)                    # population sizes to simulate 
 simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
 survival = 0.90                         # survival rate from literature I saw 85-90%
-agecap   = seq(2, 102, 20)              # maximum age (2 to 102 using 20 year intervals in example)
+maxage   = 13                           # set maximum age based on caribou literature 
+#agecap   = seq(2, 102, 20)             # maximum age (2 to 102 using 20 year intervals in example)
+maturity = 2                            # age of maturity to reproduce set at 2 years
 reps     = 100                          # replicates
 structK  = 3                            # number of K for structure analyses
 levels   = seq(0, 500, 25)              # years to run structure
