@@ -12,7 +12,7 @@ RunSims = function(alleles, allelefreqs, popsize, simyears, survival, agecap, re
     #iterate over maximum ages
     for(a in 1:length(maxage)){
       #iterate over replicates
-      for (j in 1:reps){
+      for (j in 1:reps){==
         #het matrix
         hetmatrix = matrix(nrow = (simyears + 1), ncol = 5) 
         colnames(hetmatrix) = c("popsize", "rep", "year", "maxage", "H")
