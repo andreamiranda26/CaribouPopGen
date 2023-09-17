@@ -1,5 +1,5 @@
 #Migrate
-#used for complex migration model for ABM class
+#used for caribou genetics chapter from Ginas code 
 
 #do this for one migrant per year
 #also try to find the max migrants (i.e, 5, or 10)

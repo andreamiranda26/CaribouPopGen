@@ -26,12 +26,12 @@ miggy.V       = c(0,       #migration parameter type -- set in Migrate.R; 0 = no
                   "e")     #"e"=
 LBhet.V       = c(0.45, 0.07) #lowerbound limit for SOURCE POP -- called in RunModel.R
 LBp.V         = c(0.45, 0.07) #lowerbound limit for FOCAL POP -- called in RunModel.R
-maxage.V      = 9 #c(15, 3)   #maximum age individuals can be -- note, first step is ageing, so some indv start at -1
-broodsize.V   = 2 #c(4, 6)    #max brood size, aka max fecundity  
-maturity.V    = 1             #age indv becomes re productively mature
-years.V       = 350           #total run time
+maxage.V      = 13            #maximum age individuals can be
+broodsize.V   = 1             #max number of caribou offspring, aka max fecundity  
+maturity.V    = 2             #age indv becomes reproductively mature
+years.V       = 100           #total run time
 r0.V          = 1             #per capita growth rate #0/1 is stable, <0/1 is decreasing, >0/1 is increasing - currently checking cuz r0+1 in log growth eq
-nSNP.mig.V    = 100           #number of migrant specific alleles -- these are ADDITIONAL alleles to nSNP above, migrants = 1, orig pop = 0 -- called in RunModel.R and Breed.R
+nSNP.mig.V    = 10            #number of migrant specific alleles -- these are ADDITIONAL alleles to nSNP above, migrants = 1, orig pop = 0 -- called in RunModel.R and Breed.R
 nSNP.cons.V   = 0             #number of conserved alleles within species -- used to track mutation
 
 ### when adding additional variables, don't forget to add 3 times in Cover.R below, in RunModel.R, and other functions that need the variable fed in
@@ -55,12 +55,12 @@ mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2
 mu            = 0.001  #mutation rate
 
 #bottleneck parameters
-styr          = 100 #year to start pop decline
-nwk           = 300 #pop size after decline 
-drp           = 10  #number of years to drop from k to nwk
-dur           = 40  #duration of small pop size before pop growth 
-edyr          = styr+drp  #year to end pop decline, first year at low pop size (nwk)
-s             = 5000 #size of source pop
+# styr          = 100 #year to start pop decline
+# nwk           = 300 #pop size after decline 
+# drp           = 10  #number of years to drop from k to nwk
+# dur           = 40  #duration of small pop size before pop growth 
+# edyr          = styr+drp  #year to end pop decline, first year at low pop size (nwk)
+# s             = 5000 #size of source pop
 
 #run model iterating over parameters 
 theEND = NULL
@@ -88,7 +88,7 @@ Plot(theEND)
 Plot2(repEND)
 
 #add celebratory note at the end, because it worked!
-print(paste("SUCCESSSS BITCHESSSS"))
+print(paste("WHOOP"))
 
 
 #Notes on things that will need changed when going from a local computer to a high performance computing cluster:
