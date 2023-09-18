@@ -31,8 +31,8 @@ broodsize.V   = 1             #max number of caribou offspring, aka max fecundit
 maturity.V    = 2             #age indv becomes reproductively mature
 years.V       = 100           #total run time
 r0.V          = 1             #per capita growth rate #0/1 is stable, <0/1 is decreasing, >0/1 is increasing - currently checking cuz r0+1 in log growth eq
-nSNP.mig.V    = 10            #number of migrant specific alleles -- these are ADDITIONAL alleles to nSNP above, migrants = 1, orig pop = 0 -- called in RunModel.R and Breed.R
-nSNP.cons.V   = 0             #number of conserved alleles within species -- used to track mutation
+#nSNP.mig.V    = 10            #number of migrant specific alleles -- these are ADDITIONAL alleles to nSNP above, migrants = 1, orig pop = 0 -- called in RunModel.R and Breed.R
+#nSNP.cons.V   = 0             #number of conserved alleles within species -- used to track mutation
 
 ### when adding additional variables, don't forget to add 3 times in Cover.R below, in RunModel.R, and other functions that need the variable fed in
 

@@ -7,6 +7,9 @@ RunSims = function(alleles, allelefreqs, popsize, simyears, survival, agecap, re
   # originalalleles     = alleles
   # originalallelefreqs = allelefreqs
   
+  
+  
+  
   #iterate over popsize values 
   for (n in 1:length(popsize)){
     #iterate over maximum ages
