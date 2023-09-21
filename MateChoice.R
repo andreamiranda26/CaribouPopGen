@@ -46,5 +46,46 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   # Final population after the simulation
   final_population <- pop
   
+  
+  ##from HELP 
+  
+  # Set parameters
+  num_males <- 100  # Number of males
+  num_females <- 100  # Number of females
+  num_generations <- 10  # Number of generations to simulate
+  
+  # Create a dataset representing individuals with age information
+  set.seed(123)  # For reproducibility
+  males <- data.frame(
+    ID = 1:num_males,
+    Age = sample(1:10, num_males, replace = TRUE)  # Random age between 1 and 10
+  )
+  
+  females <- data.frame(
+    ID = 1:num_females,
+    Age = sample(1:10, num_females, replace = TRUE)
+  )
+  
+  # Define mating probabilities based on age
+  # For example, males aged 5 have a higher probability of mating
+  mating_probabilities <- c(0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05)
+  
+  # Initialize vectors to track mating pairs
+  mating_pairs <- data.frame(MaleID = integer(0), FemaleID = integer(0))
+  
+  # Simulate the mating process for multiple generations
+  for (gen in 1:num_generations) {
+    # Select males to mate based on age and probabilities
+    selected_males <- sample(males$ID, size = length(females$ID), prob = mating_probabilities, replace = TRUE)
+    
+    # Create mating pairs
+    mating_pairs_gen <- data.frame(MaleID = selected_males, FemaleID = females$ID)
+    
+    # Append mating pairs to the overall list
+    mating_pairs <- rbind(mating_pairs, mating_pairs_gen)
+  }
+  
+  # Results: mating_pairs dataframe contains male-female mating pairs
+  
  
   
