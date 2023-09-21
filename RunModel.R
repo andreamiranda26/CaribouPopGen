@@ -1,6 +1,6 @@
 #RunModel.R for Caribou Genetics Andrea from code -> Lamka and Willoughby 2023
 
-RunModel = function(parameters, r, directory, replicates, prj, grp){
+RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and grp are in Cover.R
   FINAL = NULL
   REP   = NULL
   POP   = NULL 
@@ -22,24 +22,38 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     # nSNP.cons     = parameters$nSNP.cons[r]
     #if add more parameters in Cover.R, add them here as well
     
+    # Set your desired ratio of males to females
+    male_ratio <- 0.3  # this would be a 30% males 70% females ratio which is what is found in the literature 
+    
+    # Calculate the number of males and females based on the desired ratio
+    num_males <- round(k * male_ratio)
+    num_females <- k - num_males
+    
+
+    
     #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
-    pop = matrix(nrow=k, ncol=12)            #each individual gets its own row 
+    pop = matrix(nrow=k, ncol=9)            #each individual gets its own row 
    # colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born")
+    colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive")
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
    # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
     pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
-    pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+   # pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+    pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio
     pop[,4] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change 
    # pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
     #pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
-    #pop[,8] = 1                              #alive or dead? alive = 1, dead = 0
+    pop[,9] = 1                              #alive or dead? alive = 1, dead = 0
     pop[,7] = 0                              #thinking subgroup born? Gina added generation born
     pop[,8] = 0                             #thinking subgroup died? gina added generation died
     pop[,5] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     pop[,6] = 0                             #proportion of migrant SNPs - initial pop will all be 0
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
+    
+   
+  
+    
     
     #generate SNPs for the starting pop 
     popgen = matrix(nrow=k, ncol=nSNP*2)
@@ -75,13 +89,13 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
       w <- sum(popgen[g ,seq(1,ncol(popgen),2)]!=popgen[g,seq(2,ncol(popgen),2)])/(ncol(popgen)/2)   #add up number of hetero sites per number of SNPs
       het[g,1] <- w
     } 
-    pop[,11] <- het  #fill in calculated heterozygosities in the pop matrix
+    pop[,5] <- het  #fill in calculated heterozygosities in the pop matrix
     
-    #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
-    popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
-    columnsb = seq(1,(nSNP.mig*2),2)
-    for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
-      popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
+    # #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
+    # popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
+    # columnsb = seq(1,(nSNP.mig*2),2)
+    # for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+    #   popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
     }
     
     #REMOVE###create conserved SNPs - will be used to follow mutation    
@@ -201,10 +215,10 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     for(y in 0:years){
       if(y != 0){
         pop = AgeUp(pop)                        #age pop + 1 year
-        pop = FitnessDeath(pop, maturity, y)    #kill indv
+        #pop = FitnessDeath(pop, maturity, y)    #kill indv
         #REMOVE##pop = DeathByAge(pop, maxage)          #age-dependent mortality
-        if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
-          print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
+        # if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
+        #   print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break
@@ -218,18 +232,18 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         mig = tt[[2]]  #output 2 is the number of migrants
         sz = sz + mig  #used for tracking number of indv and their ID numbers
         source = tt[[3]] #output 3 is the source object
-        if(sum(pop[,8]) <= 4){                #if there are <=4 indv, crash pop
-          print(paste("Population crash @ MateChoice, less than 4 indv"))
+       # if(sum(pop[,8]) <= 4){                #if there are <=4 indv, crash pop
+          #print(paste("Population crash @ MateChoice, less than 4 indv"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break
         }
-        pairs = MateChoice(pop, sex, maturity, allee, matemigs)  #choose mates
-        if(is.null(pairs)==TRUE){    #if there are no mates, pop crashes
-          print(paste("skipping pop size next, breed due to no parents"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
-          FINAL = rbind(FINAL, out[1,])
-          break  #break out of this loop
+        # pairs = MateChoice(pop, sex, maturity, allee, matemigs)  #choose mates
+        # if(is.null(pairs)==TRUE){    #if there are no mates, pop crashes
+        #   print(paste("skipping pop size next, breed due to no parents"))
+        #   out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
+        #   FINAL = rbind(FINAL, out[1,])
+        #   break  #break out of this loop
         }
         pp = PopSizeNext(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters, r, K) #calculate the next generation's pop size according to logistic growth eqn
         numboff = pp[[1]]  #output 1 is the number of offspring to produce

@@ -36,11 +36,11 @@ is.wholenumber <-
 source(paste(getwd(), "/RunModel.R", sep = ''))
 source(paste(getwd(), "/AgeUp.R", sep = ''))
 source(paste(getwd(), "/AgeDeath.R", sep = ''))
-source(paste(getwd(), "/FitnessDeath.R", sep = ''))
+#source(paste(getwd(), "/FitnessDeath.R", sep = '')) #maybe for later 
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
-source(paste(getwd(), "/Breed.R", sep = ''))
+#source(paste(getwd(), "/Breed.R", sep = '')) #seems a bit complicated for what I need 
 source(paste(getwd(), "/Analyze.R", sep = ''))
 source(paste(getwd(), "/Plot.R", sep = ''))       #has on/off switch
 source(paste(getwd(), "/Plot2.R", sep = ''))      #has on/off switch

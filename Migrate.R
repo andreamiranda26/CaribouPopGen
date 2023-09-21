@@ -24,7 +24,7 @@ Migrate = function(pop, source, y, miggy, styr, edyr, dur){
       #select migrant without replacement
       migrant = sample(1:nrow(source), 1, replace = F)
       
-      source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+      source[migrant,7] <- y   #change gen born to the generation the migrant entered the pop
       
       #take migrant from source and put into pop
       pop = rbind(pop, source[migrant,])
@@ -41,7 +41,7 @@ Migrate = function(pop, source, y, miggy, styr, edyr, dur){
         #select migrant without replacement
         migrant = sample(1:nrow(source), 1, replace = F)
         
-        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+        source[migrant,7] <- y   #change gen born to the generation the migrant entered the pop
         
         #take migrant from source and put into pop
         pop = rbind(pop, source[migrant,])
@@ -60,7 +60,7 @@ Migrate = function(pop, source, y, miggy, styr, edyr, dur){
         #select migrant without replacement
         migrant = sample(1:nrow(source), 1, replace = F)
         
-        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+        source[migrant,7] <- y   #change gen born to the generation the migrant entered the pop
         
         #take migrant from source and put into pop
         pop = rbind(pop, source[migrant,])
@@ -78,7 +78,7 @@ Migrate = function(pop, source, y, miggy, styr, edyr, dur){
         #select migrant without replacement
         migrant = sample(1:nrow(source), 1, replace = F)
         
-        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+        source[migrant,7] <- y   #change gen born to the generation the migrant entered the pop
         
         #take migrant from source and put into pop
         pop = rbind(pop, source[migrant,])
