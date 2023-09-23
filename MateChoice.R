@@ -49,26 +49,34 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   
   ##from HELP 
   
-  # Set parameters
-  num_males <- 100  # Number of males
-  num_females <- 100  # Number of females
-  num_generations <- 10  # Number of generations to simulate
+  # Set your desired ratio of males to females
+  male_ratio <- 0.3  # this would be a 30% males 70% females ratio which is what is found in the literature 
+  
+  # set parameters
+  #Calculate the number of males and females based on the desired ratio
+  num_males <- round(k * male_ratio)
+  num_females <- k - num_males
+  
+  # # Set parameters
+  # num_males <- 100  # Number of males
+  # num_females <- 100  # Number of females
+  num_generations <- 10 # Number of generations to simulate
   
   # Create a dataset representing individuals with age information
   set.seed(123)  # For reproducibility
   males <- data.frame(
     ID = 1:num_males,
-    Age = sample(1:10, num_males, replace = TRUE)  # Random age between 1 and 10
+    Age = sample(2:13, num_males, replace = TRUE)  # set this to age of maturity between 2 and 13
   )
   
   females <- data.frame(
     ID = 1:num_females,
-    Age = sample(1:10, num_females, replace = TRUE)
+    Age = sample(2:13, num_females, replace = TRUE)
   )
   
   # Define mating probabilities based on age
   # For example, males aged 5 have a higher probability of mating
-  mating_probabilities <- c(0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05)
+  mating_probabilities <- c(0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.1, 0.1, 0.05, 0, 0,0 ) #bulls are fully mature by age 5 
   
   # Initialize vectors to track mating pairs
   mating_pairs <- data.frame(MaleID = integer(0), FemaleID = integer(0))
