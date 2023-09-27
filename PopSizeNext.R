@@ -9,7 +9,7 @@
 
 
 new parameters:
-styr          = 100 #year to start pop decline
+styr          = 100 #year to start pop for stabilizing 
 # edyr          = 150 #year to end pop decline, first year at low pop size
 # nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
 # dur           = 50  #duration of small pop size before pop growth 

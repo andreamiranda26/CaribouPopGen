@@ -21,14 +21,28 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     # nSNP.mig      = parameters$nSNP.mig[r] 
     # nSNP.cons     = parameters$nSNP.cons[r]
     #if add more parameters in Cover.R, add them here as well
+  ##from code to help tweak 
     
-    # Set your desired ratio of males to females
-    male_ratio <- 0.3  # this would be a 30% males 70% females ratio which is what is found in the literature 
+    # simulation parameters
     
-    # Calculate the number of males and females based on the desired ratio
-    num_males <- round(k * male_ratio)
-    num_females <- k - num_males
+    popsize  = c(50,100)                    # population sizes to simulate 
+    simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
+    survival = 0.90                         # survival rate from literature I saw 85-90%
+    maxage   = 13                           # set maximum age based on caribou literature 
+    #agecap   = seq(2, 102, 20)             # maximum age (2 to 102 using 20 year intervals in example)
+    maturity = 2                            # age of maturity to reproduce set at 2 years
+    reps     = 100                          # replicates
+    structK  = 3                            # number of K for structure analyses
+    levels   = seq(0, 500, 25)              # years to run structure
+    delay    = 75                           # number of years between initiation of large pop and isolation second pop
     
+    
+    
+    RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
+    
+    
+    
+  
 
     
     #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
