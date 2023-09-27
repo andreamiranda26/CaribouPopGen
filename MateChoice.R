@@ -23,9 +23,7 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
         mate_sex <- ifelse(sex == "females", "males", "females")
         mate <- sample(pop[[mate_sex]], size = 1)
         
-        # Simulate mating and producing offspring
-        offspring_sex <- sample(0:1, size = 1)  # Randomly assign offspring's sex
-        offspring[[mate_sex]] <- c(offspring[[mate_sex]], offspring_sex)
+        
       }
     }
     
@@ -46,6 +44,8 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   # Final population after the simulation
   final_population <- pop
   
+  
+  #############################################################
   
   ##from HELP 
   
@@ -71,12 +71,12 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   
   females <- data.frame(
     ID = 1:num_females,
-    Age = sample(2:13, num_females, replace = TRUE)
+    Age = sample(2:13, num_females, replace = TRUE) #same maturity as males 
   )
   
   # Define mating probabilities based on age
   # For example, males aged 5 have a higher probability of mating
-  mating_probabilities <- c(0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.1, 0.1, 0.05, 0, 0,0 ) #bulls are fully mature by age 5 
+  mating_probabilities <- c(0.05, 0.05, 0.1, 0.1, 0.15, 0.15, 0.15, 0.1, 0.05, 0.05, 0.05, 0.05,0.05) #bulls are fully mature by age 5 
   
   # Initialize vectors to track mating pairs
   mating_pairs <- data.frame(MaleID = integer(0), FemaleID = integer(0))
@@ -91,6 +91,14 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
     
     # Append mating pairs to the overall list
     mating_pairs <- rbind(mating_pairs, mating_pairs_gen)
+    
+    
+    # Simulate mating and producing offspring
+    offspring_sex <- sample(0:1, size = 1)  # Randomly assign offspring's sex
+    offspring[[mating_pairs]] <- c(offspring[[mating_pairs]], offspring_sex)
+    
+    return(offspring)
+    
   }
   
   # Results: mating_pairs dataframe contains male-female mating pairs
