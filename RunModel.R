@@ -9,9 +9,9 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     #call parameters for this replicate run
     k             = parameters$k[r]
     nSNP          = parameters$nSNP[r]
-    miggy         = parameters$miggy[r]
-    LBhet         = parameters$LBhet[r]
-    LBp           = parameters$LBp[r]
+    miggy         = parameters$miggy[r] #found in Migrate.R
+    LBhet         = parameters$LBhet[r] #c(0.45, 0.07) #lowerbound limit for SOURCE POP
+    LBp           = parameters$LBp[r]   #c(0.45, 0.07) #lowerbound limit for FOCAL POP
     nMicro        = parameters$nMicro[r]
     maxage        = parameters$maxage[r]
     broodsize     = parameters$broodsize[r]
