@@ -63,7 +63,7 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   num_generations <- 10 # Number of generations to simulate
   
   # Create a dataset representing individuals with age information
-  set.seed(123)  # For reproducibility
+  set.seed(123)  # For reproducibility, every time you generate random numbers after setting this seed, you will get the same sequence of random numbers.
   males <- data.frame(
     ID = 1:num_males,
     Age = sample(2:13, num_males, replace = TRUE)  # set this to age of maturity between 2 and 13

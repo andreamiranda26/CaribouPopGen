@@ -30,23 +30,23 @@ styr          = 100 #year to start pop for stabilizing
   if(y < styr){               #maintain k for the burn in period
     K = k
     R0 = r0
-  }else if(y > edyr + dur){   
-    deltaK = abs(round((k - nwk)/(styr - edyr)))
-    K = K + deltaK
-    R0 = r0
+  # }else if(y > edyr + dur){   
+  #   deltaK = abs(round((k - nwk)/(styr - edyr)))
+  #   K = K + deltaK
+  #   R0 = r0
     
     if(K > parameters$k[r]){  #check to make sure K is not greater than the original k in Cover.R
       K <- parameters$k[r]
     }
-  }else if(styr <= y & y < edyr){ #change K to push pop into bottleneck
-    deltaK = round(abs(k - nwk)/(styr - edyr)) #this is the change in K per year for the decline period
-    #note, deltaK will be negative when pop is decreasing
-    
-    K = K + deltaK
-    
-  }else{                       #if during the duration period of bottleneck, maintain small pop size
-    K = nwk
-    R0 = r0/2    #introduce allee effect, but only at lowest pop size
+  # }else if(styr <= y & y < edyr){ #change K to push pop into bottleneck
+  #   deltaK = round(abs(k - nwk)/(styr - edyr)) #this is the change in K per year for the decline period
+  #   #note, deltaK will be negative when pop is decreasing
+  #   
+  #   K = K + deltaK
+  #   
+  # }else{                       #if during the duration period of bottleneck, maintain small pop size
+  #   K = nwk
+  #   R0 = r0/2    #introduce allee effect, but only at lowest pop size
   }
   
   #calculate the new pop size with the logistic growth equation
