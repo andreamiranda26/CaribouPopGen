@@ -21,7 +21,15 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     # nSNP.mig      = parameters$nSNP.mig[r] 
     # nSNP.cons     = parameters$nSNP.cons[r]
     #if add more parameters in Cover.R, add them here as well
+    
+    
+################################################################################    
+    
+    
+    
   ##from code to help tweak 
+    
+    
     
     # simulation parameters
     
@@ -41,7 +49,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
     
     
-    
+##################################################################################
   
 
     
@@ -128,6 +136,11 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     
     #clean up
     remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool) #focalpop, conSNPs
+    ########################################################
+    
+    
+    ### SOURCE POP
+    
     
     #initialize source population 
     source = matrix(nrow=s, ncol=12)            #each individual gets its own row.
@@ -199,6 +212,12 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     
     #write starting source to table
     ###REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
+    
+    
+    
+    
+    
+    
     
     #prepare focal and source pop for Fst analysis in hierfstat (enacted in Analyze.R)
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)                                #find number of SNPs

@@ -12,23 +12,24 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
 
 
   
-  # Function to simulate random mating
-  simulate_mating <- function(pop) {
-   
-    
-    # Iterate through females and males, allowing them to mate
-    for (sex in c("females", "males")) {
-      for (individual in population[[sex]]) {
-        # Choose a random mate from the opposite sex
-        mate_sex <- ifelse(sex == "females", "males", "females")
-        mate <- sample(pop[[mate_sex]], size = 1)
-        
-        
-      }
-    }
-    
-    return(offspring)
-  }
+  # # Function to simulate random mating
+  # simulate_mating <- function(pop) {
+  #  
+  #   
+  #   # Iterate through females and males, allowing them to mate
+  #   for (sex in c("females", "males")) {
+  #     for (individual in population[[sex]]) {
+  #       # Choose a random mate from the opposite sex
+  #       mate_sex <- ifelse(sex == "females", "males", "females")
+  #       mate <- sample(pop[[mate_sex]], size = 1)
+  #       
+  #       
+  #     }
+  #   }
+  #   
+  #   return(offspring)
+  # }
+  
   
   # Run the simulation for a specified number of generations
   for (gen in 1:num_generations) {
@@ -54,8 +55,8 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   
   # set parameters
   #Calculate the number of males and females based on the desired ratio
-  num_males <- round(k * male_ratio)
-  num_females <- k - num_males
+  num_males <- round(k * male_ratio) # It ensures that the result is a whole number.
+  num_females <- (k - num_males)
   
   # # Set parameters
   # num_males <- 100  # Number of males
@@ -76,7 +77,8 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   
   # Define mating probabilities based on age
   # For example, males aged 5 have a higher probability of mating
-  mating_probabilities <- c(0.05, 0.05, 0.1, 0.1, 0.15, 0.15, 0.15, 0.1, 0.05, 0.05, 0.05, 0.05,0.05) #bulls are fully mature by age 5 
+  mating_prob <- c(0, 0, 0.05, 0.1, 0.15, 0.15, 0.15, 0.1, 0.05, 0.05, 0.05, 0.05,0.05) #bulls are fully mature by age 5 
+  #probabilities are 0 in ages 1-3, 10-30% breeding in ages 4-7, >50% 8-13. 
   
   # Initialize vectors to track mating pairs
   mating_pairs <- data.frame(MaleID = integer(0), FemaleID = integer(0))
@@ -84,7 +86,7 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   # Simulate the mating process for multiple generations
   for (gen in 1:num_generations) {
     # Select males to mate based on age and probabilities
-    selected_males <- sample(males$ID, size = length(females$ID), prob = mating_probabilities, replace = TRUE)
+    selected_males <- sample(males$ID, size = length(females$ID), prob = mating_prob, replace = TRUE)
     
     # Create mating pairs
     mating_pairs_gen <- data.frame(MaleID = selected_males, FemaleID = females$ID)

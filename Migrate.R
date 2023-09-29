@@ -6,7 +6,8 @@
 #also do a probability of getting 0 or 1 migrants per year
 #the worry is that if the migranion is too high, the pops might not even be considered seperate
 
-Migrate = function(pop, source, y, miggy, styr, edyr, dur){
+Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas code
+  #function of the source pop, the pop, idk what y, and migration miggy on the Cover.R and styr which is the starting year
   #select number of migrants, from 1-5
   #  N = sum(pop[,8])  #gets census size
   #  Nmig = round(N*.05)  #5% of N will be new migrants == vary this later == perhaps as a parameter???
