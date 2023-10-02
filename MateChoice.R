@@ -2,7 +2,7 @@
 #used for Caribou Genetics Andrea, code from Lamka Willoughby 2023
 #tweaked 
 
-MateChoice = function(pop, sex, maturity, allee, matemigs){
+MateChoice = function(pop, sex, maturity){ #allee, matemigs
   dead = pop[pop[,9] == 0, , drop=FALSE]          #remove dead indvs
   pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
@@ -67,21 +67,21 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
   set.seed(123)  # For reproducibility, every time you generate random numbers after setting this seed, you will get the same sequence of random numbers.
   males <- data.frame(
     ID = 1:num_males,
-    Age = sample(2:13, num_males, replace = TRUE)  # set this to age of maturity between 2 and 13
+    Age = sample(maturity:maxage, num_males, replace = TRUE)  # set this to age of maturity between 2 and 13
   )
   
   females <- data.frame(
     ID = 1:num_females,
-    Age = sample(2:13, num_females, replace = TRUE) #same maturity as males 
+    Age = sample(maturity:maxage, num_females, replace = TRUE) #same maturity as males 
   )
   
-  # Define mating probabilities based on age
-  # For example, males aged 5 have a higher probability of mating
-  mating_prob <- c(0, 0, 0.05, 0.1, 0.15, 0.15, 0.15, 0.1, 0.05, 0.05, 0.05, 0.05,0.05) #bulls are fully mature by age 5 
-  #probabilities are 0 in ages 1-3, 10-30% breeding in ages 4-7, >50% 8-13. 
+  # # Define mating probabilities based on age
+  # # For example, males aged 5 have a higher probability of mating
+  # mating_prob <- c(0, 0, 0.05, 0.1, 0.15, 0.15, 0.15, 0.1, 0.05, 0.05, 0.05, 0.05,0.05) #bulls are fully mature by age 5 
+  # #probabilities are 0 in ages 1-3, 10-30% breeding in ages 4-7, >50% 8-13. 
   
   # Initialize vectors to track mating pairs
-  mating_pairs <- data.frame(MaleID = integer(0), FemaleID = integer(0))
+  mating_pairs <- data.frame(MaleID = integer(0), FemaleID = integer(0)) #the mating_pairs data frame is initially empty, with two columns, MaleID and FemaleID, both of which are expected to contain integer values.
   
   # Simulate the mating process for multiple generations
   for (gen in 1:num_generations) {
