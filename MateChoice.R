@@ -65,6 +65,17 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
   
   # Create a dataset representing individuals with age information
   set.seed(123)  # For reproducibility, every time you generate random numbers after setting this seed, you will get the same sequence of random numbers.
+  
+  # num_individuals <- 1000  # Define the number of individuals, IDK if I need this 
+  
+  individuals <- data.frame(
+    Age = numeric(num_individuals),
+    Sex = character(num_individuals),
+    Population = character(pop[,4]) #4 in run model is the subgroups according to me 
+  )
+  
+  
+  
   males <- data.frame(
     ID = 1:num_males,
     Age = sample(maturity:maxage, num_males, replace = TRUE)  # set this to age of maturity between 2 and 13
