@@ -17,7 +17,7 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
   #remember that H DROPS significantly when there is only 1-5 migrants per year when K stays around 1000. this is an argument AGAINST the 1 mig per generation rule
   
   if(miggy == "a"){
-    mig = 1
+    mig = 16 #but this would be 16 individuals from 100 in the source?
     
     print(paste("there are", mig, "migrants this year"))
     
@@ -25,7 +25,8 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
       #select migrant without replacement
       migrant = sample(1:nrow(source), 1, replace = F)
       
-      source[migrant,7] <- y   #change gen born to the generation the migrant entered the pop
+      source[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
+      #Gina wrote this as 7 but thats 10 for my tweaked version of n adult offspring
       
       #take migrant from source and put into pop
       pop = rbind(pop, source[migrant,])

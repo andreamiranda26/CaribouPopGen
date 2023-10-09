@@ -17,6 +17,7 @@ setwd("~/GitHub/CaribouPopGen")
 #.libPaths("/home/gfl0003") #need this when defining location of libraries in HPC
 
 #call installed libraries
+library(tidyverse)
 library(reshape2)    #need this for plotting
 library(adegenet)    #need this for plotting
 library(scales)      #need this for plotting, this allows transparency in colors for overlapping lines

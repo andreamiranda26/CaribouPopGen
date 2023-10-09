@@ -61,7 +61,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
    # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
     pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
    # pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
-    pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio
+    pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio, each individual assigned male (1) or female (0)
     pop[,4] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change 
    # pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
     #pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
@@ -271,12 +271,12 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
           FINAL = rbind(FINAL, out[1,])
           break
         }
-        # pairs = MateChoice(pop, sex, maturity, allee, matemigs)  #choose mates
-        # if(is.null(pairs)==TRUE){    #if there are no mates, pop crashes
-        #   print(paste("skipping pop size next, breed due to no parents"))
-        #   out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
-        #   FINAL = rbind(FINAL, out[1,])
-        #   break  #break out of this loop
+        pairs = MateChoice(pop, sex, maturity)  #choose mates, Gina had also added allee, matemigs in there , now its same as MateChoice.R
+        if(is.null(pairs)==TRUE){    #if there are no mates, pop crashes
+          print(paste("skipping pop size next, breed due to no parents"))
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
+          FINAL = rbind(FINAL, out[1,])
+          break  #break out of this loop
         }
         pp = PopSizeNext(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters, r, K) #calculate the next generation's pop size according to logistic growth eqn
         numboff = pp[[1]]  #output 1 is the number of offspring to produce

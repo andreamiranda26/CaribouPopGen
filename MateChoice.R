@@ -10,42 +10,23 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
   pop =       pop[pop[,2 >= maturity, ,drop=FALSE]         #pop without immature
   #since not returning pop, don't need to re-add pop and immature at end of function
 
-
-  
-  # # Function to simulate random mating
-  # simulate_mating <- function(pop) {
-  #  
-  #   
-  #   # Iterate through females and males, allowing them to mate
-  #   for (sex in c("females", "males")) {
-  #     for (individual in population[[sex]]) {
-  #       # Choose a random mate from the opposite sex
-  #       mate_sex <- ifelse(sex == "females", "males", "females")
-  #       mate <- sample(pop[[mate_sex]], size = 1)
-  #       
-  #       
-  #     }
-  #   }
-  #   
-  #   return(offspring)
-  # }
-  
-  
-  # Run the simulation for a specified number of generations
-  for (gen in 1:num_generations) {
-    offspring <- simulate_mating(pop)
+  #find which sex has more, male or female.
+  ck = mean(pop[,'sex']) #<0.5 female, >.5 male
+  print(paste("the sex ratio is", ck))
+  if(ck == 1){
+    print(paste("Only males left"))
+    return()   ##ERROR HERE BECAUSE BREAK/NEXT ARENT IN A LOOP (if is not a loop)
+  }else if(ck == 0){
+    print(paste("Only females left"))
+    return() #break #next
+  }else{
+    #REMOVED###turn "sex" into the value of sex with the fewest indv, 0=female, 1=male
+    #REMOVED###sex <- c(0,1)[which.min(tabulate(match(pop[,'sex'], c(0,1))))]
     
-    # Update the population with the new generation
-    pop$females <- offspring$females
-    pop$males <- offspring$males
+    #fem = 0 #this matches males to females by putting the first column always as females, this would make them all females 
     
-    # You can analyze or record data about each generation here
-  }
-  
-  # Final population after the simulation
-  final_population <- pop
-  
-  
+    #match those of opposite sex with replacement*
+    
   #############################################################
   
   ##from HELP 
@@ -57,34 +38,56 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
   #Calculate the number of males and females based on the desired ratio
   num_males <- round(k * male_ratio) # It ensures that the result is a whole number.
   num_females <- (k - num_males)
-  
+  num_females <- 100  # Number of females
+ # num_generations
   # # Set parameters
   # num_males <- 100  # Number of males
-  # num_females <- 100  # Number of females
-  num_generations <- 10 # Number of generations to simulate
+  #  <- 10 # Number of generations to simulate
   
   # Create a dataset representing individuals with age information
-  set.seed(123)  # For reproducibility, every time you generate random numbers after setting this seed, you will get the same sequence of random numbers.
-  
-  # num_individuals <- 1000  # Define the number of individuals, IDK if I need this 
-  
-  individuals <- data.frame(
-    Age = numeric(num_individuals),
-    Sex = character(num_individuals),
-    Population = character(pop[,4]) #4 in run model is the subgroups according to me 
+  # Step 1: Create the initial data frame
+  set.seed(123)  # Set a seed for reproducibility
+  num_individuals = popsize
+  mate <- data.frame(
+    ID = 1:num_individuals,
+    sex = sample(c(0,1), size= num_individuals, replace = TRUE),
+    age = sample(maturity:maxage, num_individuals, replace = TRUE),  # Assuming age ranges from 2 to 13, that the maturity and  max age respectively. 
+    breed_perc = rep(0, num_individuals)  # Initialize breeding percentage to 0
   )
   
+  # Step 2: Define rules for breeding percentage based on age
+  breed_rules <- function(pop, maxage, maturity, sex) {
+    if (sex == "male") {
+      return(0)  # Males do not contribute to breeding
+    } else {
+      # Define rules for females, e.g., increase breeding percentage with age
+      # You can customize this function based on your specific requirements
+      return(age * 5)  # Example: Breeding percentage increases by age * 5
+    }
+  }
   
+  # Step 3: Loop through ages and update breeding percentages
+  for(age in unique(pop$age)) {
+    for (sex in c("male", "female")) {
+      subset_df <- pop[pop$age == age & pop$sex == sex, ]
+      if (nrow(subset_df) > 0) {
+        breeding_pct <- breeding_rules(age, sex)
+        pop[pop$age == age & pop$sex == sex, "breeding_percentage"] <- breeding_pct
+      }
+    }
+  }
   
-  males <- data.frame(
-    ID = 1:num_males,
-    Age = sample(maturity:maxage, num_males, replace = TRUE)  # set this to age of maturity between 2 and 13
-  )
+  # Step 4: Simulate breeding for each age group
+  for (age in unique(pop$age)) {
+    males <- pop$ID[pop$age == age & pop$sex == "male"]
+    females <- pop$ID[pop$age == age & pop$sex == "female"]
+    
+    # Perform breeding simulation (e.g., using sample())
+    # You can customize this step based on your breeding algorithm
+    # For example: randomly select pairs of males and females to breed
+    # Update the breeding percentage in the data frame accordingly
+  }
   
-  females <- data.frame(
-    ID = 1:num_females,
-    Age = sample(maturity:maxage, num_females, replace = TRUE) #same maturity as males 
-  )
   
   # # Define mating probabilities based on age
   # # For example, males aged 5 have a higher probability of mating
