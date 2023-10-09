@@ -6,8 +6,8 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
   dead = pop[pop[,9] == 0, , drop=FALSE]          #remove dead indvs
   pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
-  immature  = pop[pop[,2 < maturity, ,drop=FALSE]          #remove immature indvs
-  pop =       pop[pop[,2 >= maturity, ,drop=FALSE]         #pop without immature
+  immature  = pop[pop[,2 < 13, ,drop=FALSE]          #remove immature indvs
+  pop =       pop[pop[,2 >= 13, ,drop=FALSE]         #pop without immature
   #since not returning pop, don't need to re-add pop and immature at end of function
 
   #find which sex has more, male or female.
