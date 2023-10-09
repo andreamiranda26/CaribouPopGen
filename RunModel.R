@@ -56,7 +56,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
     pop = matrix(nrow=k, ncol=9)            #each individual gets its own row 
    # colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive")
+    colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive", "n adult offspring")
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
    # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
     pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
