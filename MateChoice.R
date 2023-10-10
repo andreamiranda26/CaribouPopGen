@@ -45,7 +45,7 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
   #  <- 10 # Number of generations to simulate
   
   # Create a dataset representing individuals with age information
-  # Step 1: Create the initial data frame
+  # Create the initial data frame
   set.seed(123)  # Set a seed for reproducibility
   num_individuals = popsize
   mate <- data.frame(
@@ -119,5 +119,47 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
   
   # Results: mating_pairs dataframe contains male-female mating pairs
   
- 
+  # Step 1: Create the initial data frame
+  set.seed(123)  # Set a seed for reproducibility
+  num_individuals <- 100
+  pop <- data.frame(
+    ID = 1:num_individuals,
+    sex = sample(c("male", "female"), num_individuals, replace = TRUE),
+    age = sample(1:10, num_individuals, replace = TRUE),  # Assuming age ranges from 1 to 10
+    breeding_percentage = rep(0, num_individuals)  # Initialize breeding percentage to 0
+  )
+  
+  # Step 2: Define rules for breeding percentage based on age
+  breeding_rules <- function(age, sex) {
+    if (sex == "male") {
+      return(0)  # Males do not contribute to breeding
+    } else {
+      # Define rules for females, e.g., increase breeding percentage with age
+      # You can customize this function based on your specific requirements
+      return(age * 5)  # Example: Breeding percentage increases by age * 5
+    }
+  }
+  
+  # Step 3: Loop through ages and update breeding percentages
+  for(age in unique(pop$age)) {
+    for (sex in c("male", "female")) {
+      subset_df <- pop[pop$age == age & pop$sex == sex, ]
+      if (nrow(subset_df) > 0) {
+        breeding_pct <- breeding_rules(age, sex)
+        pop[pop$age == age & pop$sex == sex, "breeding_percentage"] <- breeding_pct
+      }
+    }
+  }
+  
+  # Step 4: Simulate breeding for each age group
+  for (age in unique(pop$age)) {
+    males <- pop$ID[pop$age == age & pop$sex == "male"]
+    females <- pop$ID[pop$age == age & pop$sex == "female"]
+    
+    # Perform breeding simulation (e.g., using sample())
+    # You can customize this step based on your breeding algorithm
+    # For example: randomly select pairs of males and females to breed
+    # Update the breeding percentage in the data frame accordingly
+  }
+  
   
