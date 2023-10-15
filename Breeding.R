@@ -1,4 +1,76 @@
-Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
+ 
+# set age
+age <- pop[,2]  # min and max age of the caribou in the population, set in RunModel.R 
+
+# # Calculate breeding percentages based on age
+# age_data$breed_percentage <- sapply(age_data$age, calculate_breeding_percentage)
+# 
+# # Print the resulting data frame
+# print(age_data)
+
+
+  # Calculate breeding percentage based on age
+  breed_percentage <- function(age) {
+    # Define the age-based breeding percentage
+    if (age < 2) {
+      return(0)  # Breeding percentage for individuals under 2 years old
+    } else (age > 2:4) {
+      return(0.3)  # Breeding percentage for individuals between 20 and 39 years old
+    } else (age > 4:7) {
+      return(0.7)  # Breeding percentage for individuals between 20 and 39 years old
+    } else (age > 7) {
+      return(0.9)  # Breeding percentage for individuals ages 7 and older 
+    }
+  }
+  
+  # simulate breeding
+  Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
+    
+    
+    # Separate males and females
+    males <- subset(population, sex == 'male')
+    females <- subset(population, sex == 'female')
+    
+    # Loop through each age category
+    for (age in unique(pop$age)) {
+      # Calculate breeding percentage for each age group
+      breed_percentage <- cal_breed_percentage(age)
+      
+      # Sample males and females separately for breeding
+      s_males <- sample(males$ID, size = round(nrow(males) * breed_percentage), replace = TRUE)
+      s_females <- sample(females$ID, size = round(nrow(females) * breeding_percentage), replace = TRUE)
+      
+      # Here, you can implement the breeding logic for selected pairs
+      # For example, you can create offspring and update the population data
+      # with the new individuals.
+      
+      # Example: Add offspring to the population
+      # offspring <- data.frame(ID = 1:100, age = 0, sex = sample(c('male', 'female'), 100, replace = TRUE))
+      # population <- rbind(population, offspring)
+    }
+    
+    # Return the updated population
+    return(population)
+  }
+  
+  # Example usage:
+  # Create a population data frame with 'ID', 'age', and 'sex' columns
+  # Replace this with your actual population data
+  pop <- data.frame(ID = 1:100, age = sample(10:60, 100, replace = TRUE), sex = sample(c('male', 'female'), 100, replace = TRUE))
+  
+  # Run the breeding simulation
+  updated_population <- simulate_breeding(pop)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ####From Ginas code 
+  
   
   #randomly narrow down pairings from pairs if n_pairs > numboff
   if(is.null(nrow(pairs))==TRUE){
