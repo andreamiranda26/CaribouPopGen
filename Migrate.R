@@ -116,7 +116,74 @@ Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas 
   }
   
   return(list(pop, mig, source))
+
+
+
+
+####Top is migrants from source to pop then bottom will be pop to source
+############################################################################################################
+
+else if(miggy == "d"){
+  #if(y <= styr | y >= edyr + dur){
+  mig = 1
+  
+  print(paste("there are", mig, "migrants this year"))
+  
+  for(m in 1:mig){
+    #select migrant without replacement
+    migrant = sample(1:nrow(pop), 1, replace = F)
+    
+    pop[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
+    
+    #take migrant from pop and put into source
+    source = rbind(source, pop[migrant,])
+    #remove migrant from pop
+    pop = pop[-migrant,]
+  }
+  #}
+  else{mig=0}
+}else if(miggy == "e"){
+  #if(y == 125){
+  mig = 100
+  
+  print(paste("there are", mig, "migrants this year"))
+  
+  for(m in 1:mig){
+    #select migrant without replacement
+    migrant = sample(1:nrow(source), 1, replace = F)
+    
+    source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+    
+    #take migrant from pop and put into source
+    source = rbind(source, pop[migrant,])
+    #remove migrant from pop
+    pop = pop[-migrant,]
+  }
+  #}
+  else{mig=0}
+}else{
+  mig = 0
 }
+
+return(list(pop, mig, source))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #things to remember from Allendorf's book, pg 209: the larger the demes, the slower they are diverging through drift; 
 #therefore proportionally fewer migrants needed to counteract drift

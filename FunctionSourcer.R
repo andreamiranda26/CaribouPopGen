@@ -41,11 +41,11 @@ source(paste(getwd(), "/AgeDeath.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
-#source(paste(getwd(), "/Breed.R", sep = '')) #seems a bit complicated for what I need 
+source(paste(getwd(), "/Breed.R", sep = ''))  
 source(paste(getwd(), "/Analyze.R", sep = ''))
 source(paste(getwd(), "/Plot.R", sep = ''))       #has on/off switch
 source(paste(getwd(), "/Plot2.R", sep = ''))      #has on/off switch
-source(paste(getwd(), "/RepSucc.R", sep = ''))
+#source(paste(getwd(), "/RepSucc.R", sep = '')) #NOt sure if I need this right now 
 
 #end of Ginas Packagesfor her code 
 

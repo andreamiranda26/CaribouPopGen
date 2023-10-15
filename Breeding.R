@@ -27,22 +27,23 @@ age <- pop[,2]  # min and max age of the caribou in the population, set in RunMo
   Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
     
     
-    # Separate males and females
+    # Separate males and females, #Note: IDK if I need this since I already have male and female separate in RunModel.R
     males <- subset(population, sex == 'male')
     females <- subset(population, sex == 'female')
     
     # Loop through each age category
     for (age in unique(pop$age)) {
-      # Calculate breeding percentage for each age group
-      breed_percentage <- cal_breed_percentage(age)
+      # # Calculate breeding percentage for each age group
+      # breed_percentage <- cal_breed_percentage(age)
       
       # Sample males and females separately for breeding
       s_males <- sample(males$ID, size = round(nrow(males) * breed_percentage), replace = TRUE)
-      s_females <- sample(females$ID, size = round(nrow(females) * breeding_percentage), replace = TRUE)
+      s_females <- sample(females$ID, size = round(nrow(females) * breed_percentage), replace = TRUE)
+      
+      #selects a random subset of male IDs from the males data frame based on the breeding percentage calculated for the given scenario, 
+      #and the number of IDs to sample is determined by multiplying the number of males by the breeding percentage.
       
       # Here, you can implement the breeding logic for selected pairs
-      # For example, you can create offspring and update the population data
-      # with the new individuals.
       
       # Example: Add offspring to the population
       # offspring <- data.frame(ID = 1:100, age = 0, sex = sample(c('male', 'female'), 100, replace = TRUE))
@@ -52,21 +53,6 @@ age <- pop[,2]  # min and max age of the caribou in the population, set in RunMo
     # Return the updated population
     return(population)
   }
-  
-  # Example usage:
-  # Create a population data frame with 'ID', 'age', and 'sex' columns
-  # Replace this with your actual population data
-  pop <- data.frame(ID = 1:100, age = sample(10:60, 100, replace = TRUE), sex = sample(c('male', 'female'), 100, replace = TRUE))
-  
-  # Run the breeding simulation
-  updated_population <- simulate_breeding(pop)
-  
-  
-  
-  
-  
-  
-  
   
   
   ####From Ginas code 
@@ -103,8 +89,11 @@ age <- pop[,2]  # min and max age of the caribou in the population, set in RunMo
   #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
   
   #generate fecundity for each set of parents
-  fecundity = sample(seq(1,broodsize,1),nrow(parents),replace=T, prob = NULL) 
+  fecundity = sample(seq(1,broodsize,1),nrow(parents),replace=T, prob = NULL) #broodsize is in Cover.R
   parents[,3] = fecundity       #cbind(parents, fecundity)
+  #assigns those values to the parents data frame, 
+  #specifically in the third column, to represent the number of offspring each parent produces
+  
   nbabes = sum(parents[,3])
   TEMP = NULL
   for(n in 1:nrow(parents)){
@@ -121,6 +110,10 @@ age <- pop[,2]  # min and max age of the caribou in the population, set in RunMo
   }
   parents = TEMP
   remove(TEMP)
+  
+  
+  #generate parturitiona and calving percentages in females 
+  
   
   #generate unique IDS
   ##REMOVED### newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)

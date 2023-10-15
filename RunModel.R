@@ -70,6 +70,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     pop[,8] = 0                             #thinking subgroup died? gina added generation died
     pop[,5] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     pop[,6] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+    pop[,10] = NA                             #for number of offspring that reach maturity
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
     
