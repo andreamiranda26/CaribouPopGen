@@ -42,7 +42,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     reps     = 100                          # replicates
     structK  = 3                            # number of K for structure analyses
     levels   = seq(0, 500, 25)              # years to run structure
-    delay    = 75                           # number of years between initiation of large pop and isolation second pop
+    delay    = 100                           # number of years between initiation of large pop and isolation second pop
     
     
     
@@ -333,35 +333,35 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
         
         print(paste("DONE!", y, "param", r, "rep", rr))   #for tracking which sim run you're on
         
-        #clean up by removing dead indv every 25 years, this will speed up computation time
-        if(is.wholenumber(y/25)==TRUE){
-          print(paste("Cleaning up dead!"))
-          dead <- pop[pop[,8]==0,,drop=FALSE]
-          deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes, will speed up computation time
-          if(y==25){
-            write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=FALSE, quote=FALSE, row.names=FALSE) #create new dead for this parameter set
-          }else{
-            write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)  #add to previously made table
-          }
+        # #clean up by removing dead indv every 25 years, this will speed up computation time
+        # if(is.wholenumber(y/25)==TRUE){
+        #   print(paste("Cleaning up dead!"))
+        #   dead <- pop[pop[,8]==0,,drop=FALSE]
+        #   deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes, will speed up computation time
+        #   if(y==25){
+        #     write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=FALSE, quote=FALSE, row.names=FALSE) #create new dead for this parameter set
+        #   }else{
+        #     write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)  #add to previously made table
+        #   }
           pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
           remove(dead, deadindv) #clean up
         }
         #REMOVE##pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- use this if don't need to hold dead indv above and not using RepSucc.R -- this will speed it up!!
       }
-      if(y == 0){
-        K = k
+      # if(y == 0){
+      #   K = k
       }
       #analyze each replicate
       out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
       FINAL = rbind(FINAL, out[1,])
     }
-    #read in dead indv for RepSucc.R
-    died = read.table(paste(directory, "/Output/dead.csv", sep=""), header=F, sep=",")
-    indv = pop[, c(1:sz_col)]  #remove indv genotypes - just a check, should have happened when saving dead indv above
-    colnames(died) = colnames(indv)
-    pop_indv = rbind(indv,died) #add dead to pop for RepSucc calculations
-    remove(pop, indv, died)   #clean up
-    
+    # #read in dead indv for RepSucc.R
+    # died = read.table(paste(directory, "/Output/dead.csv", sep=""), header=F, sep=",")
+    # indv = pop[, c(1:sz_col)]  #remove indv genotypes - just a check, should have happened when saving dead indv above
+    # colnames(died) = colnames(indv)
+    # pop_indv = rbind(indv,died) #add dead to pop for RepSucc calculations
+    # remove(pop, indv, died)   #clean up
+    # 
     # #calc Reproductive Success using pop data
     # aa = RepSucc(pop_indv, maturity, years, rr, r, prj, grp)
     # pop_indv = aa[[1]]  #output 1 is the final pop with all indv and all indv data
