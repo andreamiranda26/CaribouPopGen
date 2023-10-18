@@ -18,8 +18,8 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     maturity      = parameters$maturity[r]
     years         = parameters$years[r]
     r0            = parameters$r0[r]
-    # nSNP.mig      = parameters$nSNP.mig[r] 
-    # nSNP.cons     = parameters$nSNP.cons[r]
+    nSNP.mig      = parameters$nSNP.mig[r] 
+    nSNP.cons     = parameters$nSNP.cons[r]
     #if add more parameters in Cover.R, add them here as well
     
     
@@ -76,11 +76,11 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     
    
     #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
-    pop = matrix(nrow=k, ncol=12)            #each individual gets its own row 
-    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
+    pop = matrix(nrow=k, ncol=13)            #each individual gets its own row 
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "subgroup") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
     pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
-    pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+    pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity (although i had to change to a numner 2 since maturity was giving me errors) and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
     pop[,5] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
     pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
     pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
@@ -89,6 +89,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     pop[,10] = 0                             #generation died
     pop[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+    pop[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
     
@@ -128,13 +129,13 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
       w <- sum(popgen[g ,seq(1,ncol(popgen),2)]!=popgen[g,seq(2,ncol(popgen),2)])/(ncol(popgen)/2)   #add up number of hetero sites per number of SNPs
       het[g,1] <- w
     } 
-    pop[,5] <- het  #fill in calculated heterozygosities in the pop matrix
+    pop[,11] <- het  #fill in calculated heterozygosities in the pop matrix
     
     # #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
-    # popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
-    # columnsb = seq(1,(nSNP.mig*2),2)
-    # for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
-    #   popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
+    popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
+    columnsb = seq(1,(nSNP.mig*2),2)
+    for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+      popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
     }
     
     #REMOVE###create conserved SNPs - will be used to follow mutation    
@@ -156,26 +157,29 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     ########################################################
     
     
-    ################# SOURCE POP, this would be the sub populations 
+    ################# SOURCE POP, this would be the subpopulations or subgroups within Mulchatna (East, West or Central)
     
     
     #initialize source population 
-    source = matrix(nrow=s, ncol=12)            #each individual gets its own row.
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    source[,1] = seq(-(s),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
+    source = matrix(nrow=k, ncol=13)            #each individual gets its own row.
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "subgroup") #just to give a better understanding of what these variables are, set names
+    source[,1] = seq(-(k),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents because parents arent in focal pop
-    source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
-    source[,5] = sample(c(0,1),s,replace=T)     #each individual assigned male (1) or female (0) 
+    source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
+    source[,5] = sample(c(0,1),k,replace=T)     #each individual assigned male (1) or female (0) 
     source[,6] = NA                             #this will be for number of times as a parent
     source[,7] = NA                             #for number of offspring that reach maturity
     source[,8] = 1                              #alive or dead? alive = 1, dead = 0
     source[,9] = -1                             #generation born - will be changed in Migrate.R to the generation entered focal pop
     source[,10] = 0                             #generation died
     source[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
-    source[,12] = 1                             #proportion of migrant SNPs - initial source pop will all be 1
+    source[,12] = 0                             #proportion of migrant SNPs - initial source pop will all be 1
+    source[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
+    sz = k                                   #to keep track of the number of indv for ID'ing later
+    sz_col = ncol(pop)
     
     #generate source gentoypes
-    sourcegen = matrix(nrow=s, ncol=nSNP*2)
+    sourcegen = matrix(nrow=k, ncol=nSNP*2) #this is where s was too instead of k
     columns = seq(1,(nSNP*2),2)  #create 2 columns per SNP with 0-1 for each allele
     for(l in 1:nSNP){
       p = sample(seq(from=LBhet, to=(LBhet+0.1), by=0.01), 1)  #introduce variation by selecting p, range defined in Cover.R
