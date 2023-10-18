@@ -46,36 +46,52 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     
     
     
-    RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
+    #RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
     
     
 ##################################################################################
   
 
+   #  
+   #  #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
+   #  pop = matrix(nrow=k, ncol=9)            #each individual gets its own row 
+   # # colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
+   #  colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive", "n adult offspring")
+   #  pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
+   # # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
+   #  pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+   # # pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+   #  pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio, each individual assigned male (1) or female (0)
+   #  pop[,4] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change 
+   # # pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
+   #  #pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
+   #  pop[,9] = 1                              #alive or dead? alive = 1, dead = 0
+   #  pop[,7] = 0                              #thinking subgroup born? Gina added generation born
+   #  pop[,8] = 0                             #thinking subgroup died? gina added generation died
+   #  pop[,5] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
+   #  pop[,6] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+   #  pop[,10] = NA                             #for number of offspring that reach maturity
+   #  sz = k                                   #to keep track of the number of indv for ID'ing later
+   #  sz_col = ncol(pop)
     
+   
     #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
-    pop = matrix(nrow=k, ncol=9)            #each individual gets its own row 
-   # colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive", "n adult offspring")
+    pop = matrix(nrow=k, ncol=12)            #each individual gets its own row 
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
-   # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
-    pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
-   # pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
-    pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio, each individual assigned male (1) or female (0)
-    pop[,4] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change 
-   # pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
-    #pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
-    pop[,9] = 1                              #alive or dead? alive = 1, dead = 0
-    pop[,7] = 0                              #thinking subgroup born? Gina added generation born
-    pop[,8] = 0                             #thinking subgroup died? gina added generation died
-    pop[,5] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
-    pop[,6] = 0                             #proportion of migrant SNPs - initial pop will all be 0
-    pop[,10] = NA                             #for number of offspring that reach maturity
+    pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
+    pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+    pop[,5] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+    pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
+    pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
+    pop[,8] = 1                              #alive or dead? alive = 1, dead = 0
+    pop[,9] = 0                              #generation born
+    pop[,10] = 0                             #generation died
+    pop[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
+    pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
     
-   
-  
     
     
     #generate SNPs for the starting pop 
