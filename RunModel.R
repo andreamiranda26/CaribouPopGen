@@ -30,21 +30,21 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
   ##from code to help tweak 
     
     
-    
-    # simulation parameters
-    
-    popsize  = c(50,100)                    # population sizes to simulate 
-    simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
-    survival = 0.90                         # survival rate from literature I saw 85-90%
-    maxage   = 13                           # set maximum age based on caribou literature 
-    #agecap   = seq(2, 102, 20)             # maximum age (2 to 102 using 20 year intervals in example)
-    maturity = 2                            # age of maturity to reproduce set at 2 years
-    reps     = 100                          # replicates
-    structK  = 3                            # number of K for structure analyses
-    levels   = seq(0, 500, 25)              # years to run structure
-    delay    = 100                           # number of years between initiation of large pop and isolation second pop
-    
-    
+    # 
+    # # simulation parameters
+    # 
+    # popsize  = c(50,100)                    # population sizes to simulate 
+    # simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
+    # survival = 0.90                         # survival rate from literature I saw 85-90%
+    # maxage   = 13                           # set maximum age based on caribou literature 
+    # #agecap   = seq(2, 102, 20)             # maximum age (2 to 102 using 20 year intervals in example)
+    # maturity = 2                            # age of maturity to reproduce set at 2 years
+    # reps     = 100                          # replicates
+    # structK  = 3                            # number of K for structure analyses
+    # levels   = seq(0, 500, 25)              # years to run structure
+    # delay    = 100                           # number of years between initiation of large pop and isolation second pop
+    # 
+    # 
     
     #RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
     
