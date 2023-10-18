@@ -102,10 +102,12 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
     colnames(pairs) <- c('mom','dad','migident')
     
     remove(dead, immature, mates, rand)
+   
     
+    
+     
     return(pairs)
   }
-}
 #Reminder: migrants are not preferentially chosen, so migrants =/= effective migrants
 
 
@@ -113,3 +115,5 @@ MateChoice = function(pop, sex, maturity){ #allee, matemigs
 
   #############################################################
  
+    
+    
