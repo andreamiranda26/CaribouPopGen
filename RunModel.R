@@ -80,7 +80,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "subgroup") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
     pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
-    pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity (although i had to change to a numner 2 since maturity was giving me errors) and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+    pop[,4] = rpois(k,maturity) - 1         #set age with a poisson distribution around the age of maturity (although i had to change to a numner 2 since maturity was giving me errors) and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
     pop[,5] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
     pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
     pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
@@ -91,7 +91,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
     pop[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
     sz = k                                   #to keep track of the number of indv for ID'ing later
-    sz_col = ncol(pop)
+    sz_col = ncol(pop)                       #make sure to feed into breeding function 
     
     
     
@@ -173,10 +173,10 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     source[,9] = -1                             #generation born - will be changed in Migrate.R to the generation entered focal pop
     source[,10] = 0                             #generation died
     source[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
-    source[,12] = 0                             #proportion of migrant SNPs - initial source pop will all be 1
+    source[,12] = 1                             #proportion of migrant SNPs - initial source pop will all be 1
     source[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
-    sz = k                                   #to keep track of the number of indv for ID'ing later
-    sz_col = ncol(pop)
+    szs = s                                   #to keep track of the number of indv for ID'ing later
+    szs_col = ncol(source)
     
     #generate source gentoypes
     sourcegen = matrix(nrow=k, ncol=nSNP*2) #this is where s was too instead of k
