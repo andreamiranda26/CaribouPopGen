@@ -1,6 +1,6 @@
 
 # simulate breeding
-Breed = function(pop, source, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
+Breed = function(pop, source, pairs, numboff, k, sz, s, szs, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){ #s and szs are in run model for the source population 
   
   
   # Separate males and females, #Note: IDK if I need this since I already have male and female separate in RunModel.R
