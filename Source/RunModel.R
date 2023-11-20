@@ -8,6 +8,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
   for(rr in 1:replicates){
     #call parameters for this replicate run
     k             = parameters$k[r]
+    s             = parameters$s[r]
     nSNP          = parameters$nSNP[r]
     miggy         = parameters$miggy[r] #found in Migrate.R
     LBhet         = parameters$LBhet[r] #c(0.45, 0.07) #lowerbound limit for SOURCE POP
@@ -18,8 +19,8 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     maturity      = parameters$maturity[r]
     years         = parameters$years[r]
     r0            = parameters$r0[r]
-    # nSNP.mig      = parameters$nSNP.mig[r] 
-    # nSNP.cons     = parameters$nSNP.cons[r]
+    nSNP.mig      = parameters$nSNP.mig[r] 
+    nSNP.cons     = parameters$nSNP.cons[r]
     #if add more parameters in Cover.R, add them here as well
     
     
@@ -30,51 +31,69 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
   ##from code to help tweak 
     
     
+    # 
+    # # simulation parameters
+    # 
+    # popsize  = c(50,100)                    # population sizes to simulate 
+    # simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
+    # survival = 0.90                         # survival rate from literature I saw 85-90%
+    # maxage   = 13                           # set maximum age based on caribou literature 
+    # #agecap   = seq(2, 102, 20)             # maximum age (2 to 102 using 20 year intervals in example)
+    # maturity = 2                            # age of maturity to reproduce set at 2 years
+    # reps     = 100                          # replicates
+    # structK  = 3                            # number of K for structure analyses
+    # levels   = seq(0, 500, 25)              # years to run structure
+    # delay    = 100                           # number of years between initiation of large pop and isolation second pop
+    # 
+    # 
     
-    # simulation parameters
-    
-    popsize  = c(50,100)                    # population sizes to simulate 
-    simyears = 100                          # total years to run the isolation portion of the simulation (does not include delay)
-    survival = 0.90                         # survival rate from literature I saw 85-90%
-    maxage   = 13                           # set maximum age based on caribou literature 
-    #agecap   = seq(2, 102, 20)             # maximum age (2 to 102 using 20 year intervals in example)
-    maturity = 2                            # age of maturity to reproduce set at 2 years
-    reps     = 100                          # replicates
-    structK  = 3                            # number of K for structure analyses
-    levels   = seq(0, 500, 25)              # years to run structure
-    delay    = 75                           # number of years between initiation of large pop and isolation second pop
-    
-    
-    
-    RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
+    #RunSims(alleles, allelefreqs, popsize, simyears, survival, agecap, reps, structK, levels, delay)
     
     
 ##################################################################################
   
 
-    
-    #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
-    pop = matrix(nrow=k, ncol=9)            #each individual gets its own row 
-   # colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive", "n adult offspring")
-    pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
-   # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
-    pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
-   # pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
-    pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio, each individual assigned male (1) or female (0)
-    pop[,4] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change 
-   # pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
-    #pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
-    pop[,9] = 1                              #alive or dead? alive = 1, dead = 0
-    pop[,7] = 0                              #thinking subgroup born? Gina added generation born
-    pop[,8] = 0                             #thinking subgroup died? gina added generation died
-    pop[,5] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
-    pop[,6] = 0                             #proportion of migrant SNPs - initial pop will all be 0
-    sz = k                                   #to keep track of the number of indv for ID'ing later
-    sz_col = ncol(pop)
+   #  
+   #  #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
+   #  pop = matrix(nrow=k, ncol=9)            #each individual gets its own row 
+   # # colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
+   #  colnames(pop) <- c("id", "age", "sex", "subgroup","relative fitness", "prop migrant SNPs", "sub born", "sub died", "alive", "n adult offspring")
+   #  pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
+   # # pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
+   #  pop[,2] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+   # # pop[,3] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+   #  pop[, 3] <- sample(c(0, 1), size = k, replace = TRUE, prob = c(1 - male_ratio, male_ratio))  # Generate males and females with the desired ratio, each individual assigned male (1) or female (0)
+   #  pop[,4] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change 
+   # # pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
+   #  #pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
+   #  pop[,9] = 1                              #alive or dead? alive = 1, dead = 0
+   #  pop[,7] = 0                              #thinking subgroup born? Gina added generation born
+   #  pop[,8] = 0                             #thinking subgroup died? gina added generation died
+   #  pop[,5] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
+   #  pop[,6] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+   #  pop[,10] = NA                             #for number of offspring that reach maturity
+   #  sz = k                                   #to keep track of the number of indv for ID'ing later
+   #  sz_col = ncol(pop)
     
    
-  
+    #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
+    pop = matrix(nrow=k, ncol=13)            #each individual gets its own row 
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "subgroup") #just to give a better understanding of what these variables are, set names
+    pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
+    pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
+    pop[,4] = rpois(k,maturity) - 1         #set age with a poisson distribution around the age of maturity (although i had to change to a numner 2 since maturity was giving me errors) and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+    pop[,5] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+    pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
+    pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
+    pop[,8] = 1                              #alive or dead? alive = 1, dead = 0
+    pop[,9] = 0                              #generation born
+    pop[,10] = 0                             #generation died
+    pop[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
+    pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+    pop[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
+    sz = k                                   #to keep track of the number of indv for ID'ing later
+    sz_col = ncol(pop)                       #make sure to feed into breeding function 
+    
     
     
     #generate SNPs for the starting pop 
@@ -111,13 +130,13 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
       w <- sum(popgen[g ,seq(1,ncol(popgen),2)]!=popgen[g,seq(2,ncol(popgen),2)])/(ncol(popgen)/2)   #add up number of hetero sites per number of SNPs
       het[g,1] <- w
     } 
-    pop[,5] <- het  #fill in calculated heterozygosities in the pop matrix
+    pop[,11] <- het  #fill in calculated heterozygosities in the pop matrix
     
     # #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
-    # popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
-    # columnsb = seq(1,(nSNP.mig*2),2)
-    # for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
-    #   popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
+    popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
+    columnsb = seq(1,(nSNP.mig*2),2)
+    for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+      popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
     }
     
     #REMOVE###create conserved SNPs - will be used to follow mutation    
@@ -139,16 +158,16 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     ########################################################
     
     
-    ### SOURCE POP
+    ################# SOURCE POP, this would be the subpopulations or subgroups within Mulchatna (East, West or Central)
     
     
     #initialize source population 
-    source = matrix(nrow=s, ncol=12)            #each individual gets its own row.
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    source[,1] = seq(-(s),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
+    source = matrix(nrow=k, ncol=13)            #each individual gets its own row.
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "subgroup") #just to give a better understanding of what these variables are, set names
+    source[,1] = seq(-(k),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents because parents arent in focal pop
-    source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
-    source[,5] = sample(c(0,1),s,replace=T)     #each individual assigned male (1) or female (0) 
+    source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
+    source[,5] = sample(c(0,1),k,replace=T)     #each individual assigned male (1) or female (0) 
     source[,6] = NA                             #this will be for number of times as a parent
     source[,7] = NA                             #for number of offspring that reach maturity
     source[,8] = 1                              #alive or dead? alive = 1, dead = 0
@@ -156,9 +175,12 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     source[,10] = 0                             #generation died
     source[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     source[,12] = 1                             #proportion of migrant SNPs - initial source pop will all be 1
+    source[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
+    szs = s                                   #to keep track of the number of indv for ID'ing later
+    szs_col = ncol(source)
     
     #generate source gentoypes
-    sourcegen = matrix(nrow=s, ncol=nSNP*2)
+    sourcegen = matrix(nrow=k, ncol=nSNP*2) #this is where s was too instead of k
     columns = seq(1,(nSNP*2),2)  #create 2 columns per SNP with 0-1 for each allele
     for(l in 1:nSNP){
       p = sample(seq(from=LBhet, to=(LBhet+0.1), by=0.01), 1)  #introduce variation by selecting p, range defined in Cover.R
@@ -332,41 +354,41 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
         
         print(paste("DONE!", y, "param", r, "rep", rr))   #for tracking which sim run you're on
         
-        #clean up by removing dead indv every 25 years, this will speed up computation time
-        if(is.wholenumber(y/25)==TRUE){
-          print(paste("Cleaning up dead!"))
-          dead <- pop[pop[,8]==0,,drop=FALSE]
-          deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes, will speed up computation time
-          if(y==25){
-            write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=FALSE, quote=FALSE, row.names=FALSE) #create new dead for this parameter set
-          }else{
-            write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)  #add to previously made table
-          }
+        # #clean up by removing dead indv every 25 years, this will speed up computation time
+        # if(is.wholenumber(y/25)==TRUE){
+        #   print(paste("Cleaning up dead!"))
+        #   dead <- pop[pop[,8]==0,,drop=FALSE]
+        #   deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes, will speed up computation time
+        #   if(y==25){
+        #     write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=FALSE, quote=FALSE, row.names=FALSE) #create new dead for this parameter set
+        #   }else{
+        #     write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)  #add to previously made table
+        #   }
           pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
           remove(dead, deadindv) #clean up
         }
         #REMOVE##pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- use this if don't need to hold dead indv above and not using RepSucc.R -- this will speed it up!!
       }
-      if(y == 0){
-        K = k
+      # if(y == 0){
+      #   K = k
       }
       #analyze each replicate
       out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
       FINAL = rbind(FINAL, out[1,])
     }
-    #read in dead indv for RepSucc.R
-    died = read.table(paste(directory, "/Output/dead.csv", sep=""), header=F, sep=",")
-    indv = pop[, c(1:sz_col)]  #remove indv genotypes - just a check, should have happened when saving dead indv above
-    colnames(died) = colnames(indv)
-    pop_indv = rbind(indv,died) #add dead to pop for RepSucc calculations
-    remove(pop, indv, died)   #clean up
-    
-    #calc Reproductive Success using pop data
-    aa = RepSucc(pop_indv, maturity, years, rr, r, prj, grp)
-    pop_indv = aa[[1]]  #output 1 is the final pop with all indv and all indv data
-    rep = aa[[2]]       #output 2 are calculations of repro success
-    REP = rbind(REP, rep)  #combine with other runs
-    #REMOVE##POP = rbind(POP, pop)  #use this if tracking pop, slows computation considerably
+    # #read in dead indv for RepSucc.R
+    # died = read.table(paste(directory, "/Output/dead.csv", sep=""), header=F, sep=",")
+    # indv = pop[, c(1:sz_col)]  #remove indv genotypes - just a check, should have happened when saving dead indv above
+    # colnames(died) = colnames(indv)
+    # pop_indv = rbind(indv,died) #add dead to pop for RepSucc calculations
+    # remove(pop, indv, died)   #clean up
+    # 
+    # #calc Reproductive Success using pop data
+    # aa = RepSucc(pop_indv, maturity, years, rr, r, prj, grp)
+    # pop_indv = aa[[1]]  #output 1 is the final pop with all indv and all indv data
+    # rep = aa[[2]]       #output 2 are calculations of repro success
+    # REP = rbind(REP, rep)  #combine with other runs
+    # #REMOVE##POP = rbind(POP, pop)  #use this if tracking pop, slows computation considerably
     
     print(paste("REPLICATE", rr, "OF PARAM", r, "DONE!"))  #track where you are in the sim
   } 
