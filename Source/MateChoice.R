@@ -3,7 +3,7 @@
 #tweaked 
 
 MateChoice = function(pop, source, sex, maturity) { #allee, matemigs
-  dead = pop[pop[,9] == 0, , drop=FALSE]          #remove dead indvs
+  dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
   pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
   immature  = pop[pop[,4] < 2, ,drop=FALSE]          #remove immature indvs
@@ -111,7 +111,7 @@ MateChoice = function(pop, source, sex, maturity) { #allee, matemigs
     
  #######Code below is for source population 
     
-    sdeadS = source[source[,9] == 0, , drop=FALSE]          #remove sdeadS indvs
+    sdeadS = source[source[,8] == 0, , drop=FALSE]          #remove sdeadS indvs
     source = source[which(source[,1]%NOTin%sdeadS), , drop=FALSE]
     
     simmature  = source[source[,2 < 13, ,drop=FALSE]          #remove simmature indvs
@@ -156,10 +156,10 @@ MateChoice = function(pop, source, sex, maturity) { #allee, matemigs
                                       sselected_males <- sample(smales$id, snum_males_select, replace = TRUE)
                                       
                                       # Combine selected males and females as mates
-                                      pairs <- c(sselected_males, sfemales$id)
+                                      spairs <- c(sselected_males, sfemales$id)
                                       
                                       # Shuffle the mates
-                                      pairs <- sample(smates)
+                                      #spairs <- sample(smates)
                                       
                                       #pair individuals - females with males so n_pairs = n_females
                                       #pairs <- cbind(source[source[,'sex'] == fem, 'id'], mates)

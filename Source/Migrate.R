@@ -90,7 +90,7 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
         #remove migrant from source
         source = source[-migrant,]
       }
-  #}
+  }
   else{mig=0}
   }else if(miggy == "e"){
     #if(y == 125){
