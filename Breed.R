@@ -1,35 +1,38 @@
 
-# set age
-age <- pop[,2]  # min and max age of the caribou in the population, set in RunModel.R 
-
-# # Calculate breeding percentages based on age
-# age_data$breed_percentage <- sapply(age_data$age, calculate_breeding_percentage)
-# 
-# # Print the resulting data frame
-# print(age_data)
-
-
-# Calculate breeding percentage based on age
-breed_percentage <- function(age) {
-  # Define the age-based breeding percentage
-  if (age < 2) {
-    return(0)  # Breeding percentage for individuals under 2 years old
-  } else (age > 2:4) {
-    return(0.3)  # Breeding percentage for individuals between 20 and 39 years old
-  } else (age > 4:7) {
-    return(0.7)  # Breeding percentage for individuals between 20 and 39 years old
-  } else (age > 7) {
-    return(0.9)  # Breeding percentage for individuals ages 7 and older 
-  }
-}
-
 # simulate breeding
-Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
+Breed = function(pop, source, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
   
   
   # Separate males and females, #Note: IDK if I need this since I already have male and female separate in RunModel.R
-  males <- subset(population, sex == 'male')
-  females <- subset(population, sex == 'female')
+  males <- subset(pop, sex == 'male')
+  females <- subset(pop, sex == 'female')
+ # pop[,5], not sure if I would need
+  
+  # set age
+  age <- pop[,4]  # min and max age of the caribou in the population, set in RunModel.R 
+  
+  # # Calculate breeding percentages based on age
+  # age_data$breed_percentage <- sapply(age_data$age, calculate_breeding_percentage)
+  # 
+  # # Print the resulting data frame
+  # print(age_data)
+  
+  
+  # Calculate breeding percentage based on age
+  
+  
+  
+  breed_percentage <- function(age) {
+    # Define the age-based breeding percentage
+    if (age < 2) {
+      return(0)  # Breeding percentage for individuals under 2 years old
+    } else (age > 2:4) {
+      return(0.3)  # Breeding percentage for individuals between 20 and 39 years old
+    } else (age > 4:7) {
+      return(0.7)  # Breeding percentage for individuals between 20 and 39 years old
+    } else (age > 7) {
+      return(0.9)  # Breeding percentage for individuals ages 7 and older 
+    }
   
   # Loop through each age category
   for (age in unique(pop$age)) {
@@ -51,8 +54,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   }
   
   # Return the updated population
-  return(population)
-}
+#   return(population)
+# }
 
 
 ####From Ginas code 
@@ -125,7 +128,9 @@ babies[,1] = SZ                   #each individual has unique ID name; sequence 
 babies[,2] = parents[,1]
 babies[,3] = parents[,2]
 babies[,4] = 0    #first of the year - consider if these should be 0 or -1
-babies[,5] = sample(c(0,1),nrow(babies),replace=T)    #each individual assigned male (1) or female (0) #sample from zero nrow times, with replacements. aka set sex
+babies[,5] = sample(c(0,1),nrow(babies),replace=T, prob = c(.3,.7)) #this is where the ratios are set     
+#each individual assigned male (1) or female (0) #sample from zero nrow times, with replacements. aka set sex
+#mature[ee,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(.5/het/100,(1-(.5/het/100)))) 
 babies[,6] = NA #REMOVED##0                #####sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
 babies[,7] = NA                 #####sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
 babies[,8] = 1      #make every baby alive
