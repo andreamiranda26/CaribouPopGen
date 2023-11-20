@@ -26,17 +26,18 @@ Breed = function(pop, source, pairs, numboff, k, sz, s, szs, nSNP, nSNP.mig, bro
     # Define the age-based breeding percentage
     if (age < 2) {
       return(0)  # Breeding percentage for individuals under 2 years old
-    } else (age > 2:4) {
+    } else if (age > 2:4) {
       return(0.3)  # Breeding percentage for individuals between 20 and 39 years old
-    } else (age > 4:7) {
-      return(0.7)  # Breeding percentage for individuals between 20 and 39 years old
-    } else (age > 7) {
+    } else if (age > 4:7) {
+      return(0.7)   # Breeding percentage for individuals between 20 and 39 years old
+    } else if (age > 7) {
       return(0.9)  # Breeding percentage for individuals ages 7 and older 
     }
-  }
+    }
+    
   
   # Loop through each age category
-  for (age in unique(pop$age)) {
+  for (age in unique(pop[,"age"])) { # or age <- pop[,4] 
     # # Calculate breeding percentage for each age group
     # breed_percentage <- cal_breed_percentage(age)
     
