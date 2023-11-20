@@ -2,12 +2,12 @@
 #used for Caribou Genetics Andrea, code from Lamka Willoughby 2023
 #tweaked 
 
-MateChoice = function(pop, source, sex, maturity){ #allee, matemigs
+MateChoice = function(pop, source, sex, maturity) { #allee, matemigs
   dead = pop[pop[,9] == 0, , drop=FALSE]          #remove dead indvs
   pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
-  immature  = pop[pop[,2 < 13, ,drop=FALSE]          #remove immature indvs
-  pop =       pop[pop[,2 >= 13, ,drop=FALSE]         #pop without immature
+  immature  = pop[pop[,4] < 2, ,drop=FALSE]          #remove immature indvs
+  pop =       pop[pop[,4] >= 2, ,drop=FALSE]         #pop without immature
   #since not returning pop, don't need to re-add pop and immature at end of function
 
   #find which sex has more, male or female.
@@ -19,7 +19,8 @@ MateChoice = function(pop, source, sex, maturity){ #allee, matemigs
   }else if(ck == 0){
     print(paste("Only females left"))
     return() #break #next
-  }else{
+  }else
+    {
     #REMOVED###turn "sex" into the value of sex with the fewest indv, 0=female, 1=male
     #REMOVED###sex <- c(0,1)[which.min(tabulate(match(pop[,'sex'], c(0,1))))]
     
@@ -32,26 +33,26 @@ MateChoice = function(pop, source, sex, maturity){ #allee, matemigs
     #for now, replace = true since sometimes more males than females
     #note, != means NOT 
     
-    # Define the proportion of males you want relative to females
-    male_ratio <- 0.3  # This value based off of literature 30% bulls 
-    
-    # Select females from the population
-    females <- pop[pop$sex == 'female', ]
-    
-    # Select males from the population
-    males <- pop[pop$sex == 'male', ]
-    
-    # Determine the number of males to select based on the proportion
-    num_males_select <- round(male_ratio * nrow(females))
-    
-    # Sample males
-    selected_males <- sample(males$id, num_males_select, replace = TRUE)
-    
-    # Combine selected males and females as mates
-    pairs <- c(selected_males, females$id)
-    
-    # Shuffle the mates
-    pairs <- sample(mates)
+    # # Define the proportion of males you want relative to females
+    # male_ratio <- 0.3  # This value based off of literature 30% bulls 
+    # 
+    # # Select females from the population
+    # females <- pop[pop$sex == 'female', ]
+    # 
+    # # Select males from the population
+    # males <- pop[pop$sex == 'male', ]
+    # 
+    # # Determine the number of males to select based on the proportion
+    # num_males_select <- round(male_ratio * nrow(females))
+    # 
+    # # Sample males
+    # selected_males <- sample(males$id, num_males_select, replace = TRUE)
+    # 
+    # # Combine selected males and females as mates
+    # pairs <- c(selected_males, females$id)
+    # 
+    # # Shuffle the mates
+    # pairs <- sample(mates)
     
     #pair individuals - females with males so n_pairs = n_females
     #pairs <- cbind(pop[pop[,'sex'] == fem, 'id'], mates)
@@ -102,7 +103,9 @@ MateChoice = function(pop, source, sex, maturity){ #allee, matemigs
     colnames(pairs) <- c('mom','dad','migident')
     
     remove(dead, immature, mates, rand)
-   
+    }
+  
+
     
     
     
@@ -140,10 +143,10 @@ MateChoice = function(pop, source, sex, maturity){ #allee, matemigs
                                       # Define the proportion of males you want relative to females
                                       smale_ratio <- 0.3  # This value based off of literature 30% bulls 
                                       
-                                      # Select females from the sourceulation
+                                      # Select females from the source
                                       sfemales <- source[source$sex == 'female', ]
                                       
-                                      # Select males from the sourceulation
+                                      # Select males from the source
                                       smales <- source[source$sex == 'male', ]
                                       
                                       # Determine the number of males to select based on the proportion
@@ -208,16 +211,16 @@ MateChoice = function(pop, source, sex, maturity){ #allee, matemigs
                                       
  remove(sdeadS, ssimmature, smates, srand)
      
-    return(spairs)
-  }
+    return(list(pair, spairs))
+                                    }
+                                    
+}
+
+
+
 #Reminder: migrants are not preferentially chosen, so migrants =/= effective migrants
 
 
 
 
   #############################################################
- 
-    
-
-  #############################################################
- 
