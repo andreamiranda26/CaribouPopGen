@@ -33,6 +33,7 @@ Breed = function(pop, source, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, 
     } else (age > 7) {
       return(0.9)  # Breeding percentage for individuals ages 7 and older 
     }
+  }
   
   # Loop through each age category
   for (age in unique(pop$age)) {
@@ -308,7 +309,9 @@ remove(babies, babygeno, dd, fem, het, mal, migrantgen, mm, mSNP, pairs, parents
        NE, alive, adult, adult_f, adult_m, mig_f, mig_m)
 
 return(list(pop,bb))
+
 }
+
 
 
 #CHANGES TO MUTATION THAT NEED TO BE MADE - 1.13.22

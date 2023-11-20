@@ -130,15 +130,15 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
       
       for(sm in 1:smig){
         #select smigrant without replacement
-        smigrant = sample(1:nrow(source), 1, replace = F)
+        smigrant = sample(1:nrow(pop), 1, replace = F)
         
-        source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+        pop[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
         #Gina wrote this as 9 as generation born
         
         #take smigrant from source and put into source
-        source = rbind(source, source[smigrant,])
+        source = rbind(source, pop[smigrant,])
         #remove smigrant from source
-        source = source[-smigrant,]
+        pop = pop[-smigrant,]
       }
     }else if(smiggy == "b"){
       # if(y == 175){
@@ -149,19 +149,19 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
       
       for(m in 1:smig){
         #select smigrant without replacement
-        smigrant = sample(1:nrow(source), 1, replace = F)
+        smigrant = sample(1:nrow(pop), 1, replace = F)
         
-        source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+        pop[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
         
         #take smigrant from source and put into source
-        source = rbind(source, source[smigrant,])
+        source = rbind(source, pop[smigrant,])
         #remove smigrant from source
-        source = source[-smigrant,]
+        pop = pop[-smigrant,]
       }
     }else{smig=0}
-  }else if(ssmiggy == "c"){
+  }else if(smiggy == "c"){
     #if(y == 175|y == 201|y==225){
-    ssmig = 6   #4/67 am I doing the math correct?
+    smig = 6   #4/67 am I doing the math correct?
     
     #Ginas Notes: 25 #1  #sample(c(1:15), 1, replace=T) #put in the number of smigrants for this set of runs #OLD
     #note that the 1:smig smight affect the number. pay attention to this.
@@ -170,17 +170,17 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
     
     for(m in 1:smig){
       #select smigrant without replacement
-      smigrant = sample(1:nrow(source), 1, replace = F)
+      smigrant = sample(1:nrow(pop), 1, replace = F)
       
-      source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+      pop[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
       
       #take smigrant from source and put into source
-      source = rbind(source, source[smigrant,])
+      source = rbind(source, pop[smigrant,])
       #remove smigrant from source
-      source = source[-smigrant,]
+      pop = pop[-smigrant,]
     } 
   }else{smig=0}
-}else if(sssmiggy == "d"){
+}else if(smiggy == "d"){
   #if(y <= styr | y >= edyr + dur){
   smig = 1
   
@@ -188,31 +188,31 @@ Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas 
   
   for(m in 1:smig){
     #select smigrant without replacement
-    smigrant = sample(1:nrow(source), 1, replace = F)
+    smigrant = sample(1:nrow(pop), 1, replace = F)
     
-    source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+    pop[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
     
     #take smigrant from source and put into source
-    source = rbind(source, source[smigrant,])
+    source = rbind(source, pop[smigrant,])
     #remove smigrant from source
-    source = source[-smigrant,]
+    pop = pop[-smigrant,]
   }
   #}
   else{smig=0}
 }else if(smiggy == "e"){
   #if(y == 125){
-  mig = 100
+  smig = 100
   
-  print(paste("there are", mig, "migrants this year"))
+  print(paste("there are", smig, "smigrants this year"))
   
   for(sm in 1:smig){
     #select migrant without replacement
-    smigrant = sample(1:nrow(source), 1, replace = F)
+    smigrant = sample(1:nrow(pop), 1, replace = F)
     
-    source[smigrant,9] <- y   #change gen born to the generation the migrant entered the source
+    pop[smigrant,9] <- y   #change gen born to the generation the migrant entered the source
     
     #take migrant from source and put into source
-    source = rbind(source, source[smigrant,])
+    source = rbind(source, pop[smigrant,])
     #remove migrant from source
     pop = pop[-smigrant,]
   }
