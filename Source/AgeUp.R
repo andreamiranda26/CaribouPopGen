@@ -33,6 +33,6 @@ if(!is.null(nrow(source))){
 source<- rbind(source,sdeadS)                                  #recall dead indvs
 remove(sdeadS)                                            #clean up
 
-return(pop,source)                                         #might give error at this point: Error: no function to return from, jumping to top level, ignore this error when debugging! 
+return(list(pop,source))                                         #might give error at this point: Error: no function to return from, jumping to top level, ignore this error when debugging! 
 
 }

@@ -80,7 +80,7 @@ AgeDeath = function(pop, source, maxage, y){
   
   remove(sbabes, sdeadS, snkilled, stotalkilled, sage)
   
-  return(pop, source)
+  return(list(pop, source))
 }
 ##DOUBLE CHECK THAT NOT LOSING INDVS
 #RARELY, but still a thing, a few individuals die that shouldnt (i.e. they are not at max age and are killed with oldies but the number to kill is smaller than oldies, so that shouldnt happen). keep and eye on this and figure out why this occurs

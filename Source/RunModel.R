@@ -4,7 +4,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
   FINAL = NULL
   REP   = NULL
   POP   = NULL 
-  #rr=1  #use this when debugging, remove this when not skipping through the below line
+  rr=1  #use this when debugging, remove this when not skipping through the below line
   for(rr in 1:replicates){
     #call parameters for this replicate run
     k             = parameters$k[r]
@@ -91,7 +91,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     pop[,10] = 0                             #generation died
     pop[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
-    pop[,13] = sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
+    pop[,13] = NA #keep as NA for now, hold for open column #sample(c("E","W"), k, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)                       #make sure to feed into breeding function 
     
@@ -167,7 +167,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "subgroup") #just to give a better understanding of what these variables are, set names
     source[,1] = seq(-(s),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents because parents arent in focal pop
-    source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
+    source[,4] = rpois(s,maturity) - 1         #set age with a poisson distribution around the age of maturity (although i had to change to a numner 2 since maturity was giving me errors) and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
     source[,5] = sample(c(0,1),s,replace=T)     #each individual assigned male (1) or female (0) 
     source[,6] = NA                             #this will be for number of times as a parent
     source[,7] = NA                             #for number of offspring that reach maturity
@@ -176,7 +176,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     source[,10] = 0                             #generation died
     source[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     source[,12] = 1                             #proportion of migrant SNPs - initial source pop will all be 1
-    source[,13] = sample(c("E","W"), s, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
+    source[,13] = NA #keep as NA for now, hold for open column #sample(c("E","W"), s, replace=T) #assigns indvs as East of West subgroups? this should be something I can change
     szs = s                                   #to keep track of the number of indv for ID'ing later
     szs_col = ncol(source)
     
@@ -270,30 +270,32 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
     #create for loop for each time step
     for(y in 0:years){
       if(y != 0){
-        pop = AgeUp(pop)                        #age pop + 1 year
+        aa = AgeUp(pop, source)                        #age pop + 1 year
+        pop = aa[[1]]
+        source = aa[[2]]
         #pop = FitnessDeath(pop, maturity, y)    #kill indv
         #REMOVE##pop = DeathByAge(pop, maxage)          #age-dependent mortality
         # if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
         #   print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
-          FINAL = rbind(FINAL, out[1,])
-          break
-        }
+        #  out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
+        #  FINAL = rbind(FINAL, out[1,])
+        #  break
+        #}
         #REMOVE##tttt = Stochastic(pop, stoch, k, numboff, styr, edyr, nwk, dur, y, years, r0, parameters, r)  #function for stochastic decline in pop
         #REMOVE##pop = tttt[[1]]
         #REMOVE##k = tttt[[2]]
         #REMOVE##pop = RandomDeath(pop)                  #random mortality
-        tt = Migrate(pop, source, y, miggy, styr, edyr, dur)        #subpop migration from source to focal
+        tt = Migrate(pop, source, y, miggy, smiggy, styr)        #subpop migration from source to focal
         pop = tt[[1]]  #output 1 is the pop object
-        mig = tt[[2]]  #output 2 is the number of migrants
-        sz = sz + mig  #used for tracking number of indv and their ID numbers
-        source = tt[[3]] #output 3 is the source object
+        source = tt[[2]]  #output 2 is the source object
+        #sz = sz + miggy  #used for tracking number of indv and their ID numbers
+        #szs = szs + smiggy #used for tracking number of indv and their ID numbers
        # if(sum(pop[,8]) <= 4){                #if there are <=4 indv, crash pop
           #print(paste("Population crash @ MateChoice, less than 4 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
-          FINAL = rbind(FINAL, out[1,])
-          break
-        }
+       #   out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
+        #  FINAL = rbind(FINAL, out[1,])
+        #  break
+        #}
         pairs = MateChoice(pop, sex, maturity)  #choose mates, Gina had also added allee, matemigs in there , now its same as MateChoice.R
         if(is.null(pairs)==TRUE){    #if there are no mates, pop crashes
           print(paste("skipping pop size next, breed due to no parents"))
@@ -345,13 +347,15 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
             }
           }
         }
-        pop = AgeDeath(pop, maxage, y)          #kill indv based on age
-        if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
-          print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp) #remember to feed same thing to all Analyze functions!
-          FINAL = rbind(FINAL, out[1,])
-          break
-        }
+        ad = AgeDeath(pop, source, maxage, y)          #kill indv based on age
+        pop = ad[[1]]
+        source = ad[[2]]
+        #if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
+        #  print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
+        #  out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp) #remember to feed same thing to all Analyze functions!
+        #  FINAL = rbind(FINAL, out[1,])
+        #  break
+        #}
         
         print(paste("DONE!", y, "param", r, "rep", rr))   #for tracking which sim run you're on
         
@@ -365,14 +369,14 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){ #prj and gr
         #   }else{
         #     write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)  #add to previously made table
         #   }
-          pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
-          remove(dead, deadindv) #clean up
-        }
+        #  pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
+        #  remove(dead, deadindv) #clean up
+        #}
         #REMOVE##pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- use this if don't need to hold dead indv above and not using RepSucc.R -- this will speed it up!!
       }
       # if(y == 0){
       #   K = k
-      }
+      #}
       #analyze each replicate
       out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
       FINAL = rbind(FINAL, out[1,])

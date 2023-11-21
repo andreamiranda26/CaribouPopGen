@@ -1,6 +1,6 @@
 #Set working directory, import packages, source functions, 
-#setwd(paste(directory,"/source/", sep = ''))    # set temp working directory 
-setwd("~/GitHub/CaribouPopGen")
+setwd(paste(directory,"/Source/", sep = ''))    # set temp working directory 
+#setwd("~/GitHub/CaribouPopGen")
 
 # Modified from FunctionSourcer.R for Lamka and Willoughby 2023
 
@@ -41,11 +41,11 @@ source(paste(getwd(), "/AgeDeath.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
-#source(paste(getwd(), "/Breed.R", sep = '')) #seems a bit complicated for what I need 
+source(paste(getwd(), "/Breed.R", sep = '')) #seems a bit complicated for what I need 
 source(paste(getwd(), "/Analyze.R", sep = ''))
-source(paste(getwd(), "/Plot.R", sep = ''))       #has on/off switch
-source(paste(getwd(), "/Plot2.R", sep = ''))      #has on/off switch
-source(paste(getwd(), "/RepSucc.R", sep = ''))
+#source(paste(getwd(), "/Plot.R", sep = ''))       #has on/off switch
+#source(paste(getwd(), "/Plot2.R", sep = ''))      #has on/off switch
+#source(paste(getwd(), "/RepSucc.R", sep = ''))
 
 #end of Ginas Packagesfor her code 
 
@@ -54,11 +54,12 @@ source(paste(getwd(), "/RepSucc.R", sep = ''))
 
 #install.packages("diveRsity", lib="/scratch/snyder/j/jwillou/isodrift/Rlibs/", repos='http://cran.us.r-project.org')
 #install.packages("psych", lib="/scratch/snyder/j/jwillou/isodrift/Rlibs/", repos='http://cran.us.r-project.org')
-.libPaths("/scratch/snyder/j/jwillou/isodrift/Rlibs") #include this path to search libraries 
-library(diveRsity)
-library(strataG)
-library(adegenet)
+#.libPaths("/scratch/snyder/j/jwillou/isodrift/Rlibs") #include this path to search libraries 
+#library(diveRsity)
+#library(strataG)
+#library(adegenet)
 
 #source functions
-source(paste(getwd(), "/RunSims.R", sep = ''))
-source(paste(getwd(), "/Advance.R", sep = ''))
+#source(paste(getwd(), "/RunSims.R", sep = ''))
+#source(paste(getwd(), "/Advance.R", sep = ''))
+
