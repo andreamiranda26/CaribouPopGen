@@ -2,12 +2,6 @@
 # simulate breeding
 Breed = function(pop, source, pairs, numboff, k, sz, s, szs, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){ #s and szs are in run model for the source population 
   
-  
-  # Separate males and females, #Note: IDK if I need this since I already have male and female separate in RunModel.R
-  males <- subset(pop, sex == 'male')
-  females <- subset(pop, sex == 'female')
- # pop[,5], not sure if I would need
-  
   # set age
   age <- pop[,4]  # min and max age of the caribou in the population, set in RunModel.R 
   
@@ -20,30 +14,44 @@ Breed = function(pop, source, pairs, numboff, k, sz, s, szs, nSNP, nSNP.mig, bro
   
   # Calculate breeding percentage based on age
   
+  breed_percentage <- function (ageArray) {
+    breedArray <- c()
+    for (age in ageArray) {
+      # Define the age-based breeding percentage
+      if (age < 2) {
+        breedArray <- append(breedArray, 0)  # Breeding percentage for individuals under 2 years old
+      } else if (age < 4) {
+        breedArray <- append(breedArray, 0.3)  # Breeding percentage for individuals over 4
+      } else if (age < 7) {
+        breedArray <- append(breedArray, 0.7)   # Breeding percentage for individuals over 7
+      } else if (age >= 7) {
+        breedArray <- append(breedArray, 0.9)  # Breeding percentage for individuals ages 7 and older 
+      } 
+    } 
+    return(breedArray)
+  }
+  #assigns the breeding % to each indiv based on age and created the breeding column
+  colnames <- append(colnames(pop), "breeding")
+  pop = cbind(pop, breed_percentage(pop[,"age"]))
+  colnames(pop) <- colnames
+  
+  # Separate males and females, #Note: IDK if I need this since I already have male and female separate in RunModel.R
+  males <- pop[pop[,"sex"] == "1",]
+  females <- pop[pop[,"sex"] == "0",]
+  # pop[,5], not sure if I would need
   
   
-  breed_percentage <- function(age) {
-    # Define the age-based breeding percentage
-    if (age < 2) {
-      return(0)  # Breeding percentage for individuals under 2 years old
-    } else if (age > 2:4) {
-      return(0.3)  # Breeding percentage for individuals between 20 and 39 years old
-    } else if (age > 4:7) {
-      return(0.7)   # Breeding percentage for individuals between 20 and 39 years old
-    } else if (age > 7) {
-      return(0.9)  # Breeding percentage for individuals ages 7 and older 
-    }
-    }
-    
+  sample(males[,"id"], size = 1, prob = males[,"breeding"])
+  sample(females[,"id"], size = 1, prob = females[,"breeding"])
   
   # Loop through each age category
-  for (age in unique(pop[,"age"])) { # or age <- pop[,4] 
+  #for (age in unique(pop[,"age"])) { # or age <- pop[,4] 
     # # Calculate breeding percentage for each age group
     # breed_percentage <- cal_breed_percentage(age)
     
-    # Sample males and females separately for breeding
-    s_males <- sample(males$ID, size = round(nrow(males) * breed_percentage), replace = TRUE)
-    s_females <- sample(females$ID, size = round(nrow(females) * breed_percentage), replace = TRUE)
+    # # Sample males and females separately for breeding
+    # s_males <- sample(males$ID, size = round(nrow(males) * breed_percentage), replace = TRUE)
+    # s_females <- sample(females$ID, size = round(nrow(females) * breed_percentage), replace = TRUE)
     
     #selects a random subset of male IDs from the males data frame based on the breeding percentage calculated for the given scenario, 
     #and the number of IDs to sample is determined by multiplying the number of males by the breeding percentage.
