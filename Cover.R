@@ -17,13 +17,10 @@ grp = "_group_"
 
 #parameters
 k.V           = 100        #carrying capacity
+s.V           = 100        #carrying capacity
 nSNP.V        = 10         #number of SNPs simulated, used to track drift
-miggy.V       = c(0,       #migration parameter type -- set in Migrate.R; 0 = no migration
-                  "a",     #"a"=one mig per gen  
-                  "b",     #"b"=1xof50@175  
-                  "c",     #"c"=3xpf25@175|201|225
-                  "d",     #"d"=
-                  "e")     #"e"=
+miggy.V       = 3         #number to move source > pop
+smiggy.V      = 3         #number to move pop > source
 LBhet.V       = 0.5           #Gina had c(0.45, 0.07) as lowerbound limit for SOURCE POP -- called in RunModel.R BUT I just did HWE and put .5
 LBp.V         = 0.5           #c(0.45, 0.07) Gina had this lowerbound limit for FOCAL POP -- called in RunModel.R
 maxage.V      = 13            #maximum age individuals can be
@@ -37,8 +34,8 @@ nSNP.cons.V   = 0             #number of conserved alleles within species -- use
 ### when adding additional variables, don't forget to add 3 times in Cover.R below, in RunModel.R, and other functions that need the variable fed in
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V)
-colnames(parameters) = c("k", "nSNP", "miggy", "LBhet", "LBp", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
+parameters = expand.grid(k.V, s.V, nSNP.V, miggy.V, smiggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V)
+colnames(parameters) = c("k", "s", "nSNP", "miggy", "smiggy", "LBhet", "LBp", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
 write.table(parameters, paste(directory, "/Output/parameters__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 #In file(file, ifelse(append, "a", "w")) :
 #cannot open file 'C:/Users/andre/OneDrive/Documents/GitHub/CaribouPopGen/Output/parameters__proj___group_.csv': No such file or directory
@@ -46,7 +43,7 @@ write.table(parameters, paste(directory, "/Output/parameters__proj___group_.csv"
 
 
 #clean up, remember that these are still available in parameters
-remove(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V) 
+remove(k.V, s.V, nSNP.V, miggy.V, smiggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V) 
 
 #on/off switches for functions
 replicates    = 5   #Gina had 20 here I changed to 10
@@ -73,7 +70,7 @@ s             = 100 #size of source pop
 theEND = NULL
 repEND = NULL
 finalPOP = NULL
-#r=1  #use this when debugging, remove this when not skipping through the below line
+r=1  #use this when debugging, remove this when not skipping through the below line
 for(r in 1:nrow(parameters)){
   ALL = RunModel(parameters, r, directory, replicates, prj, grp)
   FINAL = ALL[[1]]
