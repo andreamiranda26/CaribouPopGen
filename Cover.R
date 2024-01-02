@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #Cover.R
 #This model is written by Gina F. Lamka and used for Caribou Genetics chapter for Andrea 
 #adapted from Janna R. Willoughby's Captive Breeding IBM (https://github.com/jwillou/captivebreeding-IBM | doi:10.1111/cobi.13217)
@@ -107,3 +108,5 @@ print(paste("WHOOP"))
 #major things edited Dec 2022 [in progress]
 #hold more data in Analyze -- n killed, n oldies, n heterozy killed
 #CRASH THE POP
+=======
+>>>>>>> Stashed changes

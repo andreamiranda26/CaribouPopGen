@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #AgeUp.R for Caribou Genetics 
 #already tweaked and debugged!!!
 
@@ -36,3 +37,5 @@ remove(sdeadS)                                            #clean up
 return(list(pop,source))                                         #might give error at this point: Error: no function to return from, jumping to top level, ignore this error when debugging! 
 
 }
+=======
+>>>>>>> Stashed changes

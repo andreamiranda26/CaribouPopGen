@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #Age-Dependent death
 #taking the place of DeathByAge and RandomDeath and Death
 #used for Andrea Caribou Genetics chapter 
@@ -118,3 +119,5 @@ AgeDeath = function(pop, source, maxage, y){
 #notes 9/16/22 
 #do oldies > fitness at maturity age > age-based death (age/lifespan) === DO NOT PUT A LIMIT ON THE NUMBER TO KILL
 #
+=======
+>>>>>>> Stashed changes

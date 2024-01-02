@@ -6,7 +6,7 @@
 #also do a probability of getting 0 or 1 migrants per year
 #the worry is that if the migranion is too high, the pops might not even be considered seperate
 
-Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas code
+Migrate = function(pop, source, y, miggy, styr){ #edyr, dur these were in Ginas code
   #function of the source pop, the pop, idk what y, and migration miggy on the Cover.R and styr which is the starting year
   #select number of migrants, from 1-5
   #  N = sum(pop[,8])  #gets census size
@@ -25,15 +25,16 @@ Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas 
       #select migrant without replacement
       migrant = sample(1:nrow(source), 1, replace = F)
       
-      source[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
-      #Gina wrote this as 7 but thats 10 for my tweaked version of n adult offspring
+      source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+      #Gina wrote this as 9 as generation born
       
       #take migrant from source and put into pop
       pop = rbind(pop, source[migrant,])
       #remove migrant from source
       source = source[-migrant,]
     }
-  }else if(miggy == "b"){
+  
+    }else if(miggy == "b"){
     # if(y == 175){
       mig = 3 #this was from the genetic exchange of 2/67 animals in the breeding switching
       #this is seen in E to W, W to C, and C to E
@@ -44,7 +45,7 @@ Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas 
         #select migrant without replacement
         migrant = sample(1:nrow(source), 1, replace = F)
         
-        source[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
+        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
         
         #take migrant from source and put into pop
         pop = rbind(pop, source[migrant,])
@@ -65,7 +66,7 @@ Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas 
         #select migrant without replacement
         migrant = sample(1:nrow(source), 1, replace = F)
         
-        source[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
+        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
         
         #take migrant from source and put into pop
         pop = rbind(pop, source[migrant,])
@@ -83,7 +84,7 @@ Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas 
         #select migrant without replacement
         migrant = sample(1:nrow(source), 1, replace = F)
         
-        source[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
+        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
         
         #take migrant from source and put into pop
         pop = rbind(pop, source[migrant,])
@@ -113,59 +114,116 @@ Migrate = function(pop, source, y, miggy){ #styr, edyr, dur these were in Ginas 
     else{mig=0}
   }else{
     mig = 0
-  }
-  
-  return(list(pop, mig, source))
+  # }
+  # 
+  # return(list(pop, mig, source))
 
 
 
 
-####Top is migrants from source to pop then bottom will be pop to source
+####Top is to simulate migrant source into population and bottom is population to source 
 ############################################################################################################
 
-else if(miggy == "d"){
+    if(smiggy == "a"){
+      smig = 16  #but this would be 16 individuals from 100 in the source?
+      
+      print(paste("there are", smig, "smigrants this year"))
+      
+      for(sm in 1:smig){
+        #select smigrant without replacement
+        smigrant = sample(1:nrow(source), 1, replace = F)
+        
+        source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+        #Gina wrote this as 9 as generation born
+        
+        #take smigrant from source and put into source
+        source = rbind(source, source[smigrant,])
+        #remove smigrant from source
+        source = source[-smigrant,]
+      }
+    }else if(smiggy == "b"){
+      # if(y == 175){
+      smig = 3 #this was from the genetic exchange of 2/67 animals in the breeding switching
+      #this is seen in E to W, W to C, and C to E
+      
+      print(paste("there are", smig, "smigrants this year"))
+      
+      for(m in 1:smig){
+        #select smigrant without replacement
+        smigrant = sample(1:nrow(source), 1, replace = F)
+        
+        source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+        
+        #take smigrant from source and put into source
+        source = rbind(source, source[smigrant,])
+        #remove smigrant from source
+        source = source[-smigrant,]
+      }
+    }else{smig=0}
+  }else if(ssmiggy == "c"){
+    #if(y == 175|y == 201|y==225){
+    ssmig = 6   #4/67 am I doing the math correct?
+    
+    #Ginas Notes: 25 #1  #sample(c(1:15), 1, replace=T) #put in the number of smigrants for this set of runs #OLD
+    #note that the 1:smig smight affect the number. pay attention to this.
+    
+    print(paste("there are", smig, "smigrants this year"))
+    
+    for(m in 1:smig){
+      #select smigrant without replacement
+      smigrant = sample(1:nrow(source), 1, replace = F)
+      
+      source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
+      
+      #take smigrant from source and put into source
+      source = rbind(source, source[smigrant,])
+      #remove smigrant from source
+      source = source[-smigrant,]
+    } 
+  }else{smig=0}
+}else if(sssmiggy == "d"){
   #if(y <= styr | y >= edyr + dur){
-  mig = 1
+  smig = 1
   
-  print(paste("there are", mig, "migrants this year"))
+  print(paste("there are", smig, "smigrants this year"))
   
-  for(m in 1:mig){
-    #select migrant without replacement
-    migrant = sample(1:nrow(pop), 1, replace = F)
+  for(m in 1:smig){
+    #select smigrant without replacement
+    smigrant = sample(1:nrow(source), 1, replace = F)
     
-    pop[migrant,10] <- y   #change gen born to the generation the migrant entered the pop
+    source[smigrant,9] <- y   #change gen born to the generation the smigrant entered the source
     
-    #take migrant from pop and put into source
-    source = rbind(source, pop[migrant,])
-    #remove migrant from pop
-    pop = pop[-migrant,]
+    #take smigrant from source and put into source
+    source = rbind(source, source[smigrant,])
+    #remove smigrant from source
+    source = source[-smigrant,]
   }
   #}
-  else{mig=0}
-}else if(miggy == "e"){
+  else{smig=0}
+else if(smiggy == "e"){
   #if(y == 125){
   mig = 100
   
   print(paste("there are", mig, "migrants this year"))
   
-  for(m in 1:mig){
+  for(sm in 1:smig){
     #select migrant without replacement
-    migrant = sample(1:nrow(source), 1, replace = F)
+    smigrant = sample(1:nrow(source), 1, replace = F)
     
-    source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+    source[smigrant,9] <- y   #change gen born to the generation the migrant entered the source
     
-    #take migrant from pop and put into source
-    source = rbind(source, pop[migrant,])
-    #remove migrant from pop
-    pop = pop[-migrant,]
+    #take migrant from source and put into source
+    source = rbind(source, source[smigrant,])
+    #remove migrant from source
+    pop = pop[-smigrant,]
   }
   #}
   else{mig=0}
-}else{
+else{
   mig = 0
-}
+  
 
-return(list(pop, mig, source))
+return(list(pop, mig, source, smig))
 }
 
 
